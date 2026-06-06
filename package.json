@@ -10,8 +10,6 @@
     "parse-data": "node scripts/parse-excel.mjs"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.2.1",
-    "@googlemaps/js-api-loader": "^1.16.2",
     "@vueuse/core": "^10.7.2",
     "@vueuse/motion": "^2.0.0",
     "canvas-confetti": "^1.9.2",

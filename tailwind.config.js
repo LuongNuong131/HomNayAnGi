@@ -11,10 +11,15 @@ export default {
         'soft-pink': '#FFD1DA',
         'pastel-rose': '#F4A6B8',
         'warm-purple': '#8B6283',
+        'ios-bg': '#F2F2F7', // Màu nền chuẩn iOS
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'], // Dùng cho các tiêu đề lãng mạn
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
+      },
+      boxShadow: {
+        'ios': '0 8px 30px rgba(0, 0, 0, 0.04)',
+        'ios-float': '0 10px 40px rgba(139, 98, 131, 0.15)',
       }
     },
   },
