@@ -1,16 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
-    { path: '/roulette', name: 'roulette', component: () => import('@/views/RouletteView.vue') },
-    { path: '/ai-advisor', name: 'ai-advisor', component: () => import('@/views/AiAdvisorView.vue') },
-    { path: '/explore', name: 'explore', component: () => import('@/views/ExploreView.vue') },
-  ],
-  scrollBehavior() {
-    return { top: 0 }
-  }
+    { path: '/', name: 'home', component: HomeView },
+    { path: '/roulette', name: 'roulette', component: () => import('../views/RouletteView.vue') },
+    { path: '/ai-cupid', name: 'ai-cupid', component: () => import('../views/AiCupidView.vue') },
+    { path: '/memories', name: 'memories', component: () => import('../views/MemoriesView.vue') },
+    { path: '/map', name: 'map', component: () => import('../views/MapView.vue') }
+  ]
 })
 
-export default router
+export default router;

@@ -1,5 +1,30 @@
-# Vue 3 + TypeScript + Vite
+# LuNu ❤️ Bé Yêu - Hôm Nay Ăn Gì?
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Ứng dụng nhật ký ẩm thực cá nhân cao cấp dành riêng cho hai cưng. 
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Cài đặt & Khởi chạy
+
+1. Cài đặt các gói phụ thuộc:
+\`\`\`bash
+npm install
+\`\`\`
+
+2. Thiết lập môi trường (.env):
+\`\`\`
+VITE_GEMINI_API_KEY=key_cua_ban
+VITE_GOOGLE_MAPS_API_KEY=key_cua_ban
+\`\`\`
+
+3. Đồng bộ dữ liệu Excel sang JSON:
+*Đảm bảo file `Danh sách các quán ăn.xlsx` nằm ở thư mục gốc của dự án.*
+\`\`\`bash
+npm run parse-data
+\`\`\`
+
+4. Khởi chạy dự án ở môi trường dev:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+## Deploy lên Vercel
+Dự án đã được config sẵn `vercel.json`. Chỉ cần push code lên Github và kết nối với Vercel, framework sẽ tự động nhận diện là `Vite` và build tĩnh hoàn toàn miễn phí.

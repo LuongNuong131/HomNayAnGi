@@ -1,26 +1,13 @@
 export interface Restaurant {
-  id: string;
+  id: number;
   name: string;
+  price: string;
   address: string;
-  district: string;
-  category: string;
-  foodType: string;
-  priceRange: string;
   rating: number;
   visited: boolean;
-  recommended: boolean;
-  lastVisited: string;
-  visitCount: number;
-  latitude: number;
-  longitude: number;
-  mapLink: string;
-  imageUrl: string;
-  parking: string;
-  airConditioner: string;
-  suitableFor: string;
-  spicyLevel: string;
-  tags: string;
-  personalNotes: string;
-  aiSummary: string;
-  aiScore: number;
+  notes: string;
+  photoUrl: string;
+  dateVisited: string | null;
+  lat: number;
+  lng: number;
 }
