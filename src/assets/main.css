@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-darkbg text-darkfg;
+  }
+}
+
+.glass-panel {
+  @apply bg-card backdrop-blur-xl border border-black/5 shadow-premium;
+}
+
+.dark .glass-panel {
+  @apply bg-darkcard border-white/10;
+}
