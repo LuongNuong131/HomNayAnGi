@@ -1,48 +1,62 @@
 <template>
-  <main class="p-6 flex flex-col items-center justify-center min-h-[70vh]">
-    <h2 class="font-serif text-2xl text-warm-purple mb-8 text-center">Vòng Quay Tình Yêu</h2>
+  <main class="p-6 pb-24">
+    <h2 class="font-serif text-2xl text-warm-purple mb-2 text-center">Hôm nay ăn gì?</h2>
+    <p class="text-xs text-center text-gray-500 mb-6">Chọn các món đang phân vân để tạo vòng quay nhé!</p>
     
     <!-- Roulette Wheel Wrapper -->
-    <div class="relative w-72 h-72 mb-10">
-      <!-- Mũi tên chỉ định -->
-      <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-warm-purple z-20"></div>
+    <div v-if="candidates.length >= 2" class="relative w-64 h-64 mx-auto mb-10 mt-4">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-warm-purple z-20 drop-shadow-md"></div>
       
-      <!-- Bánh xe -->
       <div 
-        class="w-full h-full rounded-full border-4 border-pastel-rose overflow-hidden relative shadow-lg transition-transform duration-[4000ms] ease-out"
+        class="w-full h-full rounded-full border-4 border-pastel-rose overflow-hidden relative shadow-lg transition-transform duration-[4000ms] cubic-bezier(0.25, 1, 0.5, 1)"
         :style="{ transform: `rotate(${rotation}deg)` }"
       >
-        <!-- Vẽ các lát cắt CSS -->
-        <div v-for="(place, index) in options" :key="place.id" 
+        <div v-for="(place, index) in candidates" :key="place.id" 
              class="absolute w-full h-full origin-center"
-             :style="{ transform: `rotate(${(360 / options.length) * index}deg)` }">
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[100px] h-1/2 origin-bottom bg-opacity-20 flex items-start pt-6 justify-center text-xs font-medium text-warm-purple"
+             :style="{ transform: `rotate(${(360 / candidates.length) * index}deg)` }">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-1/2 origin-bottom bg-opacity-20 flex items-start pt-6 justify-center text-[10px] font-bold text-warm-purple"
                :class="index % 2 === 0 ? 'bg-soft-pink' : 'bg-white'">
             <span class="rotate-90 origin-left whitespace-nowrap overflow-hidden text-ellipsis w-24 text-center">{{ place.name }}</span>
           </div>
         </div>
       </div>
     </div>
+    
+    <div v-else class="w-64 h-64 mx-auto border-2 border-dashed border-soft-pink rounded-full flex items-center justify-center text-center p-6 mb-10 text-sm text-gray-400">
+      Hãy chọn ít nhất 2 quán ở bên dưới để tạo vòng quay nha!
+    </div>
 
     <button 
+      v-if="candidates.length >= 2"
       @click="spin" 
       :disabled="isSpinning"
-      class="bg-gradient-to-r from-pastel-rose to-warm-purple text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-pastel-rose/50 active:scale-95 transition-all disabled:opacity-50"
+      class="w-full bg-gradient-to-r from-pastel-rose to-warm-purple text-white font-bold py-4 rounded-2xl shadow-lg shadow-pastel-rose/50 active:scale-95 transition-all disabled:opacity-50 mb-8"
     >
       {{ isSpinning ? 'Đang quay...' : 'Quay Ngay Cưng!' }}
     </button>
 
+    <!-- Danh sách chọn quán -->
+    <h3 class="font-bold text-gray-700 text-sm mb-3">Danh sách cân nhắc:</h3>
+    <div class="space-y-2">
+      <label v-for="place in store.restaurants" :key="place.id" 
+             class="flex items-center p-3 bg-white rounded-xl border border-soft-pink/30 cursor-pointer transition-colors"
+             :class="{'bg-soft-pink/10 border-pastel-rose': selectedIds.includes(place.id)}">
+        <input type="checkbox" :value="place.id" v-model="selectedIds" class="w-5 h-5 accent-warm-purple rounded-md border-gray-300" />
+        <span class="ml-3 text-sm font-medium text-gray-800 line-clamp-1">{{ place.name }}</span>
+      </label>
+    </div>
+
     <!-- Modal Kết quả -->
-    <div v-if="selected" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm" @click.self="selected = null">
+    <div v-if="winner" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-6 backdrop-blur-sm" @click.self="winner = null">
       <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center" v-motion-pop>
-        <img :src="selected.photoUrl" class="w-full h-48 object-cover rounded-2xl mb-4" />
-        <h3 class="text-2xl font-serif text-warm-purple">{{ selected.name }}</h3>
-        <p class="text-gray-500 text-sm mt-2 mb-4">{{ selected.address }}</p>
-        <div class="flex justify-center gap-2 mb-6">
-          <span class="bg-soft-pink/50 text-warm-purple px-3 py-1 rounded-full text-xs">{{ selected.price }}</span>
-          <span v-if="selected.rating" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">⭐ {{ selected.rating }}/5</span>
+        <div class="w-20 h-20 bg-soft-pink/40 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">🎉</div>
+        <h3 class="text-xl font-serif text-warm-purple font-bold">{{ winner.name }}</h3>
+        <p class="text-gray-500 text-sm mt-2 mb-6">📍 {{ winner.address }}</p>
+        
+        <div class="flex flex-col gap-3">
+          <a v-if="winner.linkmap" :href="winner.linkmap" target="_blank" class="w-full bg-warm-purple text-white py-3 rounded-xl font-medium text-sm">Xem Bản Đồ</a>
+          <button @click="winner = null" class="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-medium text-sm">Quay Lại</button>
         </div>
-        <button @click="selected = null" class="w-full bg-pastel-rose text-white py-3 rounded-xl font-medium">Đồng ý đi đây!</button>
       </div>
     </div>
   </main>
@@ -52,39 +66,35 @@
 import { ref, computed } from 'vue';
 import { useRestaurantStore } from '../stores/restaurant';
 import confetti from 'canvas-confetti';
+import type { Restaurant } from '../types';
 
 const store = useRestaurantStore();
-// Lấy ngẫu nhiên 8 quán để làm vòng quay cho đỡ rối
-const options = computed(() => store.restaurants.slice(0, 8));
+const selectedIds = ref<number[]>([]);
+
+const candidates = computed(() => {
+  return store.restaurants.filter(r => selectedIds.value.includes(r.id));
+});
 
 const rotation = ref(0);
 const isSpinning = ref(false);
-const selected = ref<any>(null);
+const winner = ref<Restaurant | null>(null);
 
 const spin = () => {
-  if (isSpinning.value) return;
+  if (isSpinning.value || candidates.value.length < 2) return;
   isSpinning.value = true;
-  selected.value = null;
+  winner.value = null;
 
-  // Tính toán góc quay
-  const extraSpins = 5 * 360; // Quay 5 vòng
-  const randomSliceIndex = Math.floor(Math.random() * options.value.length);
-  const sliceAngle = 360 / options.value.length;
-  // Bù trừ để mũi tên chỉ vào giữa lát cắt
+  const extraSpins = 5 * 360; 
+  const randomSliceIndex = Math.floor(Math.random() * candidates.value.length);
+  const sliceAngle = 360 / candidates.value.length;
   const targetAngle = extraSpins + (360 - (randomSliceIndex * sliceAngle)) - (sliceAngle / 2);
 
   rotation.value += targetAngle;
 
   setTimeout(() => {
     isSpinning.value = false;
-    selected.value = options.value[randomSliceIndex];
-    // Bắn pháo hoa
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#FFD1DA', '#F4A6B8', '#8B6283']
-    });
-  }, 4000); // 4s animation
+    winner.value = candidates.value[randomSliceIndex];
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FFD1DA', '#F4A6B8', '#8B6283'] });
+  }, 4000);
 };
 </script>
