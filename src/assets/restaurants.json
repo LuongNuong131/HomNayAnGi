@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "name": "Mr.Ben Hamburgers & Sanwiches",
+    "price": "30k - 50k",
+    "address": "66 Đ. Số 2, Hạnh Thông, Hồ Chí Minh",
+    "advantage": "Đồ ăn ngon, sốt ngon",
+    "disadvantages": "Khẩu phần ít, khoai mang về nhà bị mền",
+    "linkmap": "https://maps.app.goo.gl/1audN5nh8hf5Mtea9"
+  },
+  {
+    "id": 2,
+    "name": "Hàu Nướng 8 vị",
+    "price": "35k/phần hấp, nướng 5k/con",
+    "address": "620 QL1A, Khu phố 1, An Phú Đông, Hồ Chí Minh",
+    "advantage": "Hàu tươi, ngon, giá rẻ",
+    "disadvantages": "Ở ngoài QL1 xe đông ồn, gia vị nướng hơi nhạt",
+    "linkmap": "https://maps.app.goo.gl/9XiJvVG9tYcp3Svk9"
+  },
+  {
+    "id": 3,
+    "name": "Bánh mì Peter",
+    "price": "30k ổ thập cẩm",
+    "address": "48/5 Đường Nguyễn Hữu Cầu, Mỹ Huề, Bà Điểm, Hồ Chí Minh",
+    "advantage": "Ngon",
+    "disadvantages": "Ngán",
+    "linkmap": "https://maps.app.goo.gl/764rFDwLXfpyDNEa6"
+  },
+  {
+    "id": 4,
+    "name": "Phá Lấu Bò Ngọc Hân",
+    "price": "23k - 47k",
+    "address": "43 Đ. Tô Ký, Đông Hưng Thuận, Hồ Chí Minh",
+    "advantage": "Lòng không bị hôi, nước ngon",
+    "disadvantages": "Mì trộn cay, chấm bánh mì không ngon lắm",
+    "linkmap": "https://maps.app.goo.gl/MKLfNog7989msdzk9"
+  },
+  {
+    "id": 5,
+    "name": "Tiệm trà Tom and Jerry",
+    "price": "15k - 20k",
+    "address": "2665 Đ. Song Hành, P, Đông Hưng Thuận, Hồ Chí Minh",
+    "advantage": "Nước ngon, rẻ",
+    "disadvantages": "Trái cây tùy người múc nhiều hay ít",
+    "linkmap": "https://maps.app.goo.gl/B7SA5eQ6CStPcxDK6"
+  },
+  {
+    "id": 6,
+    "name": "Bột chiên Anh Ơi",
+    "price": "28.000 - 38.000",
+    "address": "59/6A D. Vạn Hạnh 3, Bà Điểm, Hồ Chí Minh",
+    "advantage": "Giòn, ngon, quán dễ thương",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/8suwtLBJBrWSRV1k9"
+  },
+  {
+    "id": 7,
+    "name": "Bột chiên chú Thái",
+    "price": "35k bột chiên 2 trứng",
+    "address": "184/6 Lý Chính Thắng, Nhiêu Lộc, Hồ Chí Minh",
+    "advantage": "Trứng lòng đào, có tóp mỡ",
+    "disadvantages": "Xa vãiiiiii",
+    "linkmap": "https://maps.app.goo.gl/JiHyg871w5p8Mbsv6"
+  },
+  {
+    "id": 8,
+    "name": "Làng Bún Đậu CN2",
+    "price": "130k/2 người",
+    "address": "153 Đ.Nguyễn Văn Nghi, Hạnh Thông, Hồ Chí Minh",
+    "advantage": "Nước, bánh tráng free, đậu ngon",
+    "disadvantages": "Không có nước mắm ngọt",
+    "linkmap": "https://maps.app.goo.gl/RHHTykKh1pby4GJh6"
+  },
+  {
+    "id": 9,
+    "name": "Cơm tấm đêm Anh Tư 20K",
+    "price": "25k - 40k ",
+    "address": "509 Thị Mười, Tân Thới Hiệp, Hồ Chí Minh",
+    "advantage": "Có canh rong biển, tóp mỡ, rẻ",
+    "disadvantages": "Có lúc thịt nhiều mỡ -> ngán",
+    "linkmap": "https://maps.app.goo.gl/81zbvAGhYrbixuS97"
+  },
+  {
+    "id": 10,
+    "name": "Yagami Quận 12",
+    "price": "68k phần thập cẩm",
+    "address": "19A Đ. Nguyễn Ảnh Thủ, P, Tân Thới Hiệp, Hồ Chí Minh",
+    "advantage": "Ngon",
+    "disadvantages": "Độ cay tùy tâm trạng nhân viên",
+    "linkmap": "https://maps.app.goo.gl/ZfZfbNYBy7jYfdHz7"
+  },
+  {
+    "id": 11,
+    "name": "Chân gà nướng, lòng nướng",
+    "price": "16k/cặp, lòng từ 40k",
+    "address": "624 Đ. Lê Đức Thọ, An Hội Đông, Hồ Chí Minh",
+    "advantage": "Rẻ, nhiều bơ",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/n1WKuEpee1pNAm67A"
+  },
+  {
+    "id": 12,
+    "name": "Há cảo 4k (đối diện cổng 2 IUH)",
+    "price": "36k/9 viên",
+    "address": "12 Nguyễn Văn Bảo, Hạnh Thông, Hồ Chí Minh",
+    "advantage": "Ngon, rẻ",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/gPbbEeqNQGV8xBGL9"
+  },
+  {
+    "id": 13,
+    "name": "Buffet trà sữa ROY TEA ",
+    "price": "39k/ly lớn",
+    "address": "108 Lê Hồng Phong, Phú Lợi, Hồ Chí Minh",
+    "advantage": "Tự múc, khúc bạch ngon",
+    "disadvantages": "Xa vãi cớttttttt",
+    "linkmap": "https://maps.app.goo.gl/Q551NU4GFGfTtotd7"
+  },
+  {
+    "id": 14,
+    "name": "Lẩu Chay Hoằng Đạt 2",
+    "price": "40k/người",
+    "address": "12/1 Đường số 9, khu phố 3, Linh Xuân, Hồ Chí Minh",
+    "advantage": "Nhiều topping, ngon rẻ",
+    "disadvantages": "Đông khách",
+    "linkmap": "https://maps.app.goo.gl/uPKunAXiDheP6gDR8"
+  },
+  {
+    "id": 15,
+    "name": "Takoyaki",
+    "price": "25k/ 7 viên",
+    "address": "116 Thị Mười, Tân Thới Hiệp, Hồ Chí Minh (gần sân Cầu Suối)",
+    "advantage": "Có bắp",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/izN6r8g8YqoHwZgs8"
+  },
+  {
+    "id": 16,
+    "name": "Trứng cút nướng",
+    "price": "30k/phần",
+    "address": "37 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh (trước cổng trường)",
+    "advantage": "Có bắp, thịt, ngon vãiiiiii",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/4nRaSJi5wFG1stYW9"
+  },
+  {
+    "id": 17,
+    "name": "Buffet 79k - Hương Việt 2",
+    "price": "79k/người, nước 15k/người",
+    "address": "644 Đ. Nguyễn Văn Quá, Đông Hưng Thuận, Hồ Chí Minh",
+    "advantage": "Ngon",
+    "disadvantages": "Ít món, y như quán bún đậu",
+    "linkmap": "https://maps.app.goo.gl/52jH4Feqtbq4bBWX8"
+  },
+  {
+    "id": 18,
+    "name": "Bánh Đúc Nóng_NGUYÊN",
+    "price": "26k - 40k/phần",
+    "address": "149 Đ. Lê Đức Thọ, Gò Vấp, Hồ Chí Minh",
+    "advantage": "Ngon",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/ZrGn2JPuQ1EWWnLx5"
+  },
+  {
+    "id": 19,
+    "name": "Bánh cuốn Tây Sơn Chú Quân",
+    "price": "15k - 30k",
+    "address": "633 Đ. Tô Ký, Quận 12 (Đối diện ĐH Lao động)",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/mAHLUjXVRBQkoy8k8"
+  },
+  {
+    "id": 20,
+    "name": "Bachutha - Bánh chuối Thái - Hoàng Sa",
+    "price": "~30k",
+    "address": "781 Hoàng Sa, Nhiêu Lộc, Hồ Chí Minh",
+    "advantage": "Mix nhiều nhân",
+    "disadvantages": "Khá ngán",
+    "linkmap": "https://maps.app.goo.gl/8c64owyPUDvRZppG9"
+  },
+  {
+    "id": 21,
+    "name": "Ăn vặt Thùy Linh 3",
+    "price": "~25k",
+    "address": "121/3 Đ. Phan Văn Hớn, X, Bà Điểm, Hồ Chí Minh",
+    "advantage": "Bánh tráng cuộn trứng cút lòng đào",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/Rvnuh732PcTT8fhL7"
+  },
+  {
+    "id": 22,
+    "name": "Quán Ăn Vặt Út Minh",
+    "price": "35k - 75k/phần",
+    "address": "176 Trường Chinh, Phường, Đông Hưng Thuận, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/QmFL8p6RRkha7hLt7"
+  },
+  {
+    "id": 23,
+    "name": "The Chill Buffet (Chi Nhánh 3)",
+    "price": "139k/người (chưa nước + VAT)",
+    "address": "769 Quang Trung, An Hội Tây, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/SwrGCa8rQwUup7ta7"
+  },
+  {
+    "id": 24,
+    "name": "Hột vịt lộn",
+    "price": "6k/trứng",
+    "address": "161 Đ.Nguyễn Văn Nghi, Hạnh Thông, Hồ Chí Minh (kế bên quán Dê)",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/wTRLTJWwh7pWZJnv8"
+  },
+  {
+    "id": 25,
+    "name": "QUÁN ỐC TRỨNG MUỐI",
+    "price": "12k - 99k/phần",
+    "address": "55 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/fLGGv58D5CGo1Mtj9"
+  },
+  {
+    "id": 26,
+    "name": "Quán Phở Phát Tài",
+    "price": "",
+    "address": "59/4 Đ. Nguyễn Ảnh Thủ, Bà Điểm, Hồ Chí Minh, Việt Nam",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/EqDC45e5hQiTkqk17"
+  },
+  {
+    "id": 27,
+    "name": "Bò né 3 Ngon (Đài Loan)",
+    "price": "",
+    "address": "118 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "Dở",
+    "linkmap": "https://maps.app.goo.gl/ttmH67PB5sgZNFL77"
+  },
+  {
+    "id": 28,
+    "name": "Cá Viên Chiên Nước Mắm 140",
+    "price": "100k",
+    "address": "140 Đ. Tam Đảo, Diên Hồng, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/Lq3qDmxiRzwjbLus8"
+  },
+  {
+    "id": 29,
+    "name": "Ngõ Thái - Bình Thạnh",
+    "price": "",
+    "address": "126/6 Phan Xích Long, Gia Định, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/n2z79z7pbPZQJ65f6"
+  },
+  {
+    "id": 30,
+    "name": "Hanuri",
+    "price": "",
+    "address": "530-532 Đ. Phan Văn Trị, Hạnh Thông, Hồ Chí Minh",
+    "advantage": "",
+    "disadvantages": "",
+    "linkmap": "https://maps.app.goo.gl/mkZkjR5fkTfUc3PE9"
+  }
+]
