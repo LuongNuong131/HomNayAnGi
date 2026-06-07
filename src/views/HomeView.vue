@@ -41,64 +41,115 @@
       </transition>
     </div>
 
-    <!-- ── Filter Chips ── -->
-    <div class="filter-row no-scrollbar">
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === '' }"
-        @click="activeFilter = ''"
-      >
-        <span class="filter-chip-dot"></span>
-        Tất cả
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'cheap' }"
-        @click="activeFilter = activeFilter === 'cheap' ? '' : 'cheap'"
-      >
-        💸 Bình dân (≤30k)
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'buffet' }"
-        @click="activeFilter = activeFilter === 'buffet' ? '' : 'buffet'"
-      >
-        🍽️ Buffet
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'has_pros' }"
-        @click="activeFilter = activeFilter === 'has_pros' ? '' : 'has_pros'"
-      >
-        ✨ Có ưu điểm
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'no_cons' }"
-        @click="activeFilter = activeFilter === 'no_cons' ? '' : 'no_cons'"
-      >
-        🌟 Không nhược điểm
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'drink' }"
-        @click="activeFilter = activeFilter === 'drink' ? '' : 'drink'"
-      >
-        🧋 Đồ uống
-      </button>
-      <button
-        class="filter-chip"
-        :class="{ active: activeFilter === 'grill' }"
-        @click="activeFilter = activeFilter === 'grill' ? '' : 'grill'"
-      >
-        🔥 Đồ nướng
-      </button>
+    <!-- ── Filter Tabs ── -->
+    <div class="filter-section">
+
+      <!-- Filter type switcher -->
+      <div class="filter-switcher">
+        <button
+          class="fsw-btn"
+          :class="{ active: filterMode === 'category' }"
+          @click="filterMode = 'category'; activeDistrict = ''"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h8M4 18h16"/>
+          </svg>
+          Loại
+        </button>
+        <button
+          class="fsw-btn"
+          :class="{ active: filterMode === 'district' }"
+          @click="filterMode = 'district'; activeFilter = ''"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          Khu vực
+        </button>
+      </div>
+
+      <!-- Category filters -->
+      <transition name="filter-slide">
+        <div v-if="filterMode === 'category'" class="filter-row no-scrollbar">
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === '' }"
+            @click="activeFilter = ''"
+          >
+            <span class="filter-chip-dot"></span>
+            Tất cả
+          </button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'cheap' }"
+            @click="activeFilter = activeFilter === 'cheap' ? '' : 'cheap'"
+          >💸 Bình dân</button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'buffet' }"
+            @click="activeFilter = activeFilter === 'buffet' ? '' : 'buffet'"
+          >🍽️ Buffet</button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'has_pros' }"
+            @click="activeFilter = activeFilter === 'has_pros' ? '' : 'has_pros'"
+          >✨ Có ưu điểm</button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'no_cons' }"
+            @click="activeFilter = activeFilter === 'no_cons' ? '' : 'no_cons'"
+          >🌟 Không nhược điểm</button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'drink' }"
+            @click="activeFilter = activeFilter === 'drink' ? '' : 'drink'"
+          >🧋 Đồ uống</button>
+          <button
+            class="filter-chip"
+            :class="{ active: activeFilter === 'grill' }"
+            @click="activeFilter = activeFilter === 'grill' ? '' : 'grill'"
+          >🔥 Đồ nướng</button>
+        </div>
+      </transition>
+
+      <!-- District filters -->
+      <transition name="filter-slide">
+        <div v-if="filterMode === 'district'" class="filter-row no-scrollbar">
+          <button
+            class="filter-chip district-chip"
+            :class="{ active: activeDistrict === '' }"
+            @click="activeDistrict = ''"
+          >
+            <span class="filter-chip-dot"></span>
+            Tất cả
+          </button>
+          <button
+            v-for="d in availableDistricts"
+            :key="d.key"
+            class="filter-chip district-chip"
+            :class="{ active: activeDistrict === d.key }"
+            @click="activeDistrict = activeDistrict === d.key ? '' : d.key"
+          >
+            <span class="district-pin">📍</span>
+            {{ d.label }}
+            <span class="district-count">{{ d.count }}</span>
+          </button>
+        </div>
+      </transition>
     </div>
 
     <!-- ── Result count ── -->
-    <div class="result-info" v-if="searchQuery || activeFilter">
+    <div class="result-info" v-if="searchQuery || activeFilter || activeDistrict">
       <span class="result-count">{{ filteredRestaurants.length }}</span>
       <span class="result-label"> kết quả</span>
+      <button
+        v-if="activeFilter || activeDistrict || searchQuery"
+        class="result-clear"
+        @click="searchQuery = ''; activeFilter = ''; activeDistrict = ''"
+      >
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Xóa lọc
+      </button>
     </div>
 
     <!-- ── Empty state ── -->
@@ -112,20 +163,20 @@
 
     <!-- ── Cards ── -->
     <div class="cards-list">
-      <TransitionGroup name="list" tag="div">
+      <TransitionGroup name="list" tag="div" class="cards-inner">
         <div
           v-for="(place, index) in filteredRestaurants"
           :key="place.id"
           class="card-wrap"
-          :style="`animation-delay: ${index * 30}ms`"
+          :style="`animation-delay: ${index * 35}ms`"
           @click="openDetails(place)"
         >
           <div class="card">
-            <!-- Card petal glow -->
-            <div class="card-petal"></div>
+            <!-- Shimmer accent corner -->
+            <div class="card-corner-accent"></div>
 
-            <!-- Number -->
-            <div class="card-num">
+            <!-- Number badge -->
+            <div class="card-num-badge">
               {{ String(place.id).padStart(2, '0') }}
             </div>
 
@@ -137,33 +188,33 @@
             <!-- Body -->
             <div class="card-body">
               <h4 class="card-name">{{ place.name }}</h4>
-              <p class="card-addr">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-                     stroke="rgba(232,137,154,0.7)" stroke-width="2.5" stroke-linecap="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
+
+              <!-- District tag -->
+              <div class="card-district-tag" v-if="getDistrict(place.address)">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
-                {{ place.address }}
-              </p>
+                {{ getDistrict(place.address)?.label }}
+              </div>
+
+              <p class="card-addr">{{ place.address }}</p>
+
               <div class="card-chips">
                 <span v-if="place.price" class="chip chip-price">
-                  <span class="chip-icon">💰</span>
-                  {{ place.price }}
+                  💰 {{ place.price }}
                 </span>
                 <span v-if="place.advantage" class="chip chip-pro">
-                  <span class="chip-icon">✦</span>
-                  Có ưu điểm
+                  ✦ Có ưu điểm
                 </span>
                 <span v-if="!place.disadvantages && place.advantage" class="chip chip-clean">
-                  <span class="chip-icon">🌟</span>
-                  Không nhược điểm
+                  🌟 Hoàn hảo
                 </span>
               </div>
             </div>
 
             <!-- Arrow -->
             <div class="card-arrow">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                    stroke="#7A2D45" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
@@ -175,7 +226,9 @@
       <!-- Footer ornament -->
       <div v-if="filteredRestaurants.length > 0" class="list-footer">
         <div class="footer-line"></div>
-        <span class="footer-text">✦ {{ filteredRestaurants.length }} địa điểm ✦</span>
+        <span class="footer-ornament">✦</span>
+        <span class="footer-text">{{ filteredRestaurants.length }} địa điểm</span>
+        <span class="footer-ornament">✦</span>
         <div class="footer-line"></div>
       </div>
     </div>
@@ -203,7 +256,6 @@
 
                 <!-- Hero section -->
                 <div class="sheet-hero">
-                  <!-- BG blobs -->
                   <div class="sheet-blob-1"></div>
                   <div class="sheet-blob-2"></div>
 
@@ -213,19 +265,18 @@
                     </div>
                     <div class="sheet-info">
                       <h3 class="sheet-name">{{ selectedPlace.name }}</h3>
-                      <p class="sheet-addr">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                             stroke="rgba(232,137,154,0.65)" stroke-width="2.5" stroke-linecap="round">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                          <circle cx="12" cy="10" r="3"/>
+                      <!-- District in sheet -->
+                      <div class="sheet-district" v-if="getDistrict(selectedPlace.address)">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(232,137,154,0.8)" stroke-width="2.5" stroke-linecap="round">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                         </svg>
-                        {{ selectedPlace.address }}
-                      </p>
+                        {{ getDistrict(selectedPlace.address)?.label }}
+                      </div>
+                      <p class="sheet-addr">{{ selectedPlace.address }}</p>
                     </div>
                   </div>
                 </div>
 
-                <!-- Gold divider -->
                 <div class="sheet-divider"></div>
 
                 <!-- Price -->
@@ -299,7 +350,70 @@ const store = useRestaurantStore()
 const selectedPlace = ref<Restaurant | null>(null)
 const searchQuery   = ref('')
 const activeFilter  = ref('')
+const activeDistrict = ref('')
+const filterMode    = ref<'category' | 'district'>('category')
 
+// ─── District mapping ─────────────────────────────
+// Map ward/commune names found in addresses → district label
+interface DistrictInfo { key: string; label: string }
+
+const DISTRICT_MAP: Array<{ wards: string[]; key: string; label: string }> = [
+  {
+    key: 'go-vap',
+    label: 'Gò Vấp',
+    wards: ['Hạnh Thông', 'An Hội', 'Gò Vấp', 'Nguyễn Văn Nghi', 'Phan Văn Trị', 'Lê Đức Thọ', 'Quang Trung', 'Nguyễn Văn Bảo'],
+  },
+  {
+    key: 'quan-12',
+    label: 'Quận 12',
+    wards: ['Đông Hưng Thuận', 'Tân Thới Hiệp', 'Trung Mỹ Tây', 'An Phú Đông', 'Nguyễn Văn Quá', 'Thị Mười', 'Tô Ký', 'Quận 12'],
+  },
+  {
+    key: 'hoc-mon',
+    label: 'Hóc Môn',
+    wards: ['Bà Điểm', 'Phan Văn Hớn', 'Nguyễn Hữu Cầu', 'Nguyễn Ảnh Thủ', 'Vạn Hạnh', 'Song Hành'],
+  },
+  {
+    key: 'binh-thanh',
+    label: 'Bình Thạnh',
+    wards: ['Nhiêu Lộc', 'Gia Định', 'Phan Xích Long', 'Hoàng Sa', 'Lý Chính Thắng'],
+  },
+  {
+    key: 'thu-duc',
+    label: 'TP. Thủ Đức',
+    wards: ['Linh Xuân', 'Thủ Đức'],
+  },
+  {
+    key: 'binh-duong',
+    label: 'Bình Dương',
+    wards: ['Phú Lợi', 'Lê Hồng Phong', 'Diên Hồng', 'Tam Đảo'],
+  },
+]
+
+const getDistrict = (address: string): DistrictInfo | null => {
+  const a = address.toLowerCase()
+  for (const d of DISTRICT_MAP) {
+    if (d.wards.some(w => a.includes(w.toLowerCase()))) {
+      return { key: d.key, label: d.label }
+    }
+  }
+  return null
+}
+
+// Available districts that actually have restaurants
+const availableDistricts = computed(() => {
+  return DISTRICT_MAP
+    .map(d => {
+      const count = store.restaurants.filter(r => {
+        const dist = getDistrict(r.address)
+        return dist?.key === d.key
+      }).length
+      return { key: d.key, label: d.label, count }
+    })
+    .filter(d => d.count > 0)
+})
+
+// ─── Filtering ───────────────────────────────────
 const filteredRestaurants = computed(() => {
   let list = store.restaurants
 
@@ -322,7 +436,7 @@ const filteredRestaurants = computed(() => {
         const nums = r.price.match(/\d+/g)
         if (!nums) return false
         const min = Math.min(...nums.map(Number))
-        return min <= 30000 || (min < 100 && min <= 30) // handles "30k" pattern
+        return min <= 30000 || (min < 1000 && min <= 30)
       })
       break
     case 'buffet':
@@ -346,6 +460,14 @@ const filteredRestaurants = computed(() => {
         return n.includes('nướng') || n.includes('chân gà') || n.includes('lòng')
       })
       break
+  }
+
+  // District filter
+  if (activeDistrict.value) {
+    list = list.filter(r => {
+      const d = getDistrict(r.address)
+      return d?.key === activeDistrict.value
+    })
   }
 
   return list
@@ -382,7 +504,7 @@ const cardEmoji = (name: string): string => {
 </script>
 
 <style scoped>
-.home { padding: 22px 20px 120px; }
+.home { padding: 22px 20px 130px; }
 
 /* ── Section Header ── */
 .section-head {
@@ -446,7 +568,7 @@ const cardEmoji = (name: string): string => {
 /* ── Search ── */
 .search-wrap {
   position: relative;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .search-icon-wrap {
   position: absolute;
@@ -490,20 +612,71 @@ const cardEmoji = (name: string): string => {
 }
 .search-clear:hover { background: rgba(0,0,0,0.12); }
 
-/* ── Filter chips row ── */
+/* ── Filter Section ── */
+.filter-section {
+  margin-bottom: 10px;
+}
+
+/* Filter mode switcher */
+.filter-switcher {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(201,169,110,0.22);
+  border-radius: 14px;
+  padding: 4px;
+  width: fit-content;
+}
+.fsw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(120,100,100,0.65);
+  cursor: pointer;
+  transition: all 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.fsw-btn.active {
+  background: linear-gradient(135deg, rgba(122,45,69,0.9), rgba(196,91,110,0.85));
+  color: white;
+  box-shadow: 0 4px 14px rgba(122,45,69,0.3);
+}
+.fsw-btn:not(.active):hover {
+  color: var(--berry);
+  background: rgba(245,196,207,0.35);
+}
+
+/* Filter chips row */
 .filter-row {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 4px 2px 14px;
+  padding: 2px 2px 10px;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 }
+
+/* Filter slide transition */
+.filter-slide-enter-active,
+.filter-slide-leave-active {
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+.filter-slide-enter-from { opacity: 0; transform: translateY(-6px); }
+.filter-slide-leave-to   { opacity: 0; transform: translateY(4px); }
+
 .filter-chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 8px 15px;
+  padding: 8px 14px;
   border-radius: 100px;
   border: 1.5px solid rgba(201,169,110,0.28);
   background: rgba(255,255,255,0.65);
@@ -544,9 +717,34 @@ const cardEmoji = (name: string): string => {
   animation: pulseGlow 1.8s ease-in-out infinite;
 }
 
+/* District specific chips */
+.district-chip {
+  gap: 4px;
+}
+.district-pin {
+  font-size: 11px;
+}
+.district-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px; height: 18px;
+  border-radius: 100px;
+  background: rgba(0,0,0,0.08);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0 5px;
+}
+.filter-chip.active .district-count {
+  background: rgba(255,255,255,0.25);
+}
+
 /* ── Result info ── */
 .result-info {
-  padding: 0 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 12px;
   font-size: 12px;
 }
 .result-count {
@@ -559,6 +757,23 @@ const cardEmoji = (name: string): string => {
   color: rgba(160,145,130,0.75);
   font-weight: 500;
 }
+.result-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(122,45,69,0.18);
+  background: rgba(245,196,207,0.28);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--berry);
+  cursor: pointer;
+  margin-left: 4px;
+  transition: all 0.2s;
+}
+.result-clear:hover { background: rgba(245,196,207,0.5); }
 
 /* ── Empty ── */
 .empty-state {
@@ -577,7 +792,12 @@ const cardEmoji = (name: string): string => {
 .empty-sub { font-size: 13px; color: rgba(160,145,130,0.7); }
 
 /* ── Cards ── */
-.cards-list { display: flex; flex-direction: column; gap: 18px; }
+.cards-list {}
+.cards-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;   /* ← khoảng cách giữa các card */
+}
 
 .card-wrap {
   animation: fadeIn 0.5s ease both;
@@ -588,73 +808,107 @@ const cardEmoji = (name: string): string => {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 20px 18px 20px 18px;
-  border-radius: var(--r-card);
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(18px);
+  padding: 20px 18px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.84);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.95);
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    0 6px 32px rgba(90,31,48,0.08),
+    0 1px 4px rgba(90,31,48,0.04),
+    inset 0 1px 0 rgba(255,255,255,1);
   cursor: pointer;
   overflow: hidden;
-  transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.28s ease;
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.28s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .card:hover {
-  transform: translateY(-4px) scale(1.006);
-  box-shadow: var(--shadow-hover);
+  transform: translateY(-5px) scale(1.007);
+  box-shadow:
+    0 20px 60px rgba(90,31,48,0.14),
+    0 4px 16px rgba(90,31,48,0.07),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
-.card:active { transform: scale(0.975); box-shadow: var(--shadow-card); }
+.card:active {
+  transform: scale(0.976);
+  box-shadow: 0 4px 16px rgba(90,31,48,0.08);
+}
 
-.card-petal {
+/* Corner shimmer */
+.card-corner-accent {
   position: absolute;
   top: 0; right: 0;
-  width: 110px; height: 110px;
-  background: radial-gradient(ellipse at 100% 0%, rgba(245,196,207,0.55) 0%, transparent 65%);
+  width: 120px; height: 120px;
+  background: radial-gradient(ellipse at 100% 0%, rgba(245,196,207,0.6) 0%, transparent 60%);
   pointer-events: none;
 }
 
-.card-num {
+/* Number badge */
+.card-num-badge {
   position: absolute;
-  top: 13px; right: 16px;
+  top: 12px; right: 14px;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   color: rgba(201,169,110,0.5);
   letter-spacing: 0.06em;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 100px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.15);
 }
 
 .card-icon {
-  width: 52px; height: 52px;
-  border-radius: var(--r-icon);
+  width: 54px; height: 54px;
+  border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 3px 12px rgba(90,31,48,0.1);
+  box-shadow:
+    0 4px 14px rgba(90,31,48,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.8);
 }
 .card-emoji { font-size: 24px; }
 
 .card-body { flex: 1; min-width: 0; }
 .card-name {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 17.5px;
   font-weight: 600;
   color: var(--berry-dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 28px;
+  padding-right: 42px; /* space for num badge */
   margin-bottom: 5px;
   line-height: 1.3;
 }
+
+/* District tag inline */
+.card-district-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(232,137,154,0.15), rgba(245,196,207,0.2));
+  border: 1px solid rgba(232,137,154,0.22);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--rose-deep);
+  margin-bottom: 5px;
+}
+
 .card-addr {
-  font-size: 11.5px;
-  color: rgba(160,145,130,0.85);
+  font-size: 11px;
+  color: rgba(150,130,120,0.8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  line-height: 1.4;
 }
 .card-chips { display: flex; gap: 6px; flex-wrap: wrap; }
 
@@ -667,7 +921,6 @@ const cardEmoji = (name: string): string => {
   font-size: 10.5px;
   font-weight: 600;
 }
-.chip-icon { font-size: 11px; }
 .chip-price {
   background: linear-gradient(135deg, rgba(201,169,110,0.2), rgba(245,196,207,0.28));
   color: var(--berry);
@@ -686,22 +939,26 @@ const cardEmoji = (name: string): string => {
 
 .card-arrow {
   position: absolute;
-  bottom: 14px; right: 14px;
-  opacity: 0.28;
+  bottom: 16px; right: 14px;
+  opacity: 0.22;
   transition: opacity 0.2s, transform 0.2s;
 }
-.card:hover .card-arrow { opacity: 0.6; transform: translateX(2px); }
+.card:hover .card-arrow { opacity: 0.55; transform: translateX(2px); }
 
 /* ── List footer ── */
 .list-footer {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 24px 4px 8px;
+  gap: 10px;
+  padding: 28px 4px 8px;
 }
 .footer-line {
   flex: 1; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201,169,110,0.35), transparent);
+}
+.footer-ornament {
+  font-size: 9px;
+  color: rgba(201,169,110,0.55);
 }
 .footer-text {
   font-family: var(--font-display);
@@ -792,10 +1049,23 @@ const cardEmoji = (name: string): string => {
 .sheet-info { flex: 1; }
 .sheet-name {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 600;
   color: var(--berry-dark);
   line-height: 1.25;
+  margin-bottom: 6px;
+}
+.sheet-district {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(232,137,154,0.15), rgba(245,196,207,0.2));
+  border: 1px solid rgba(232,137,154,0.22);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--rose-deep);
   margin-bottom: 6px;
 }
 .sheet-addr {
