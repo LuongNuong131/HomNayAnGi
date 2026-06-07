@@ -6,23 +6,24 @@ export interface DistrictInfo {
 interface DistrictDef {
   key: string;
   label: string;
-  patterns: string[]; // substrings to match (case-insensitive)
+  patterns: string[];
 }
 
+// Mỗi pattern là substring lowercase sẽ được tìm trong địa chỉ lowercase
 const DISTRICTS: DistrictDef[] = [
   {
     key: 'go-vap',
     label: 'Gò Vấp',
     patterns: [
       'gò vấp', 'go vap',
-      // Old wards still used in addresses
       'hạnh thông', 'hanh thong',
-      'an hội đông', 'an hội tây', 'an hội bắc',
-      'quang trung', 'nguyễn văn nghi',
-      'phan văn trị', 'lê đức thọ',
-      'nguyễn văn bảo',
-      // Street names highly specific to GV
-      'đ. số 8, gò', 'bùi đình túy',
+      'an hội', 'an hoi',
+      'quang trung',
+      'nguyễn văn nghi', 'nguyen van nghi',
+      'phan văn trị', 'phan van tri',
+      'lê đức thọ', 'le duc tho',
+      'nguyễn văn bảo', 'nguyen van bao',
+      'bùi đình túy', 'bui dinh tuy',
     ],
   },
   {
@@ -38,7 +39,10 @@ const DISTRICTS: DistrictDef[] = [
       'thị mười', 'thi muoi',
       'tô ký', 'to ky',
       'tân chánh hiệp', 'tan chanh hiep',
-      'thạnh lộc', 'thanh loc',
+      'thạnh xuân', 'thanh xuan',
+      'tân hưng thuận', 'tan hung thuan',
+      'hiệp thành', 'hiep thanh',
+      'trường chinh, đông hưng',
     ],
   },
   {
@@ -51,9 +55,13 @@ const DISTRICTS: DistrictDef[] = [
       'nguyễn hữu cầu', 'nguyen huu cau',
       'nguyễn ảnh thủ', 'nguyen anh thu',
       'vạn hạnh', 'van hanh',
+      'song hành', 'song hanh',
       'đông thạnh', 'dong thanh',
-      'xuân thới', 'xuan thoi',
-      'tân hiệp', 'tan hiep',
+      'tân hiệp, hóc', 'tan hiep, hoc',
+      'xuân thới đông', 'xuan thoi dong',
+      'xuân thới thượng', 'xuan thoi thuong',
+      'nhị bình', 'nhi binh',
+      'thới tam thôn', 'thoi tam thon',
     ],
   },
   {
@@ -75,9 +83,10 @@ const DISTRICTS: DistrictDef[] = [
     key: 'thu-duc',
     label: 'TP. Thủ Đức',
     patterns: [
-      'thủ đức', 'thu duc', 'tp. thủ đức',
+      'thủ đức', 'thu duc',
       'linh xuân', 'linh xuan',
-      'linh trung', 'linh chiểu', 'linh tây',
+      'linh trung', 'linh chiểu', 'linh chieu',
+      'linh tây', 'linh tay',
       'hiệp bình', 'hiep binh',
       'tam bình', 'tam binh',
       'trường thọ', 'truong tho',
@@ -99,6 +108,7 @@ const DISTRICTS: DistrictDef[] = [
       'thuận an', 'thuan an',
       'dĩ an', 'di an',
       'thủ dầu một', 'thu dau mot',
+      'lê hồng phong, bình dương',
     ],
   },
   {
@@ -107,8 +117,8 @@ const DISTRICTS: DistrictDef[] = [
     patterns: [
       'tân bình', 'tan binh',
       'cộng hòa', 'cong hoa',
-      'trường chinh', 'truong chinh',
-      'lạc long quân', 'lac long quan',
+      'trường chinh, tân bình',
+      'bắc hải', 'bac hai',
     ],
   },
   {
@@ -119,6 +129,7 @@ const DISTRICTS: DistrictDef[] = [
       'hòa thạnh', 'hoa thanh',
       'hiệp tân', 'hiep tan',
       'phú thọ hòa', 'phu tho hoa',
+      'sơn kỳ', 'son ky',
     ],
   },
   {
@@ -133,18 +144,16 @@ const DISTRICTS: DistrictDef[] = [
   },
 ];
 
-// Normalize Vietnamese string for looser matching
-function normalize(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize('NFC'); // keep diacritics but lowercase
+function norm(s: string): string {
+  return s.toLowerCase();
 }
 
 export function getDistrict(address: string): DistrictInfo | null {
-  const a = normalize(address);
+  if (!address) return null;
+  const a = norm(address);
   for (const d of DISTRICTS) {
     for (const pat of d.patterns) {
-      if (a.includes(normalize(pat))) {
+      if (a.includes(norm(pat))) {
         return { key: d.key, label: d.label };
       }
     }

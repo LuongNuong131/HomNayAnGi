@@ -177,21 +177,21 @@
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           Khu vực
         </button>
+        <button class="fsw-btn" :class="{ active: filterMode === 'status' }"
+                @click="filterMode = 'status'; activeFilter = ''; activeDistrict = ''">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Trạng thái
+        </button>
       </div>
 
+      <!-- Category filters -->
       <transition name="filter-slide">
         <div v-if="filterMode === 'category'" class="filter-row no-scrollbar">
           <button class="filter-chip" :class="{ active: activeFilter === '' }" @click="activeFilter = ''">
             <span class="filter-chip-dot"></span>Tất cả
           </button>
-          <button class="filter-chip" :class="{ active: activeFilter === 'not_tried' }" @click="toggle('not_tried')">
-            ○ Chưa đi
-          </button>
-          <button class="filter-chip" :class="{ active: activeFilter === 'tried' }" @click="toggle('tried')">
-            ✓ Đã đi
-          </button>
           <button class="filter-chip" :class="{ active: activeFilter === 'cheap' }" @click="toggle('cheap')">
-            💸 Bình dân
+            💸 Bình dân (&lt;50k)
           </button>
           <button class="filter-chip" :class="{ active: activeFilter === 'has_pros' }" @click="toggle('has_pros')">
             ✨ Có ưu điểm
@@ -211,6 +211,7 @@
         </div>
       </transition>
 
+      <!-- District filters -->
       <transition name="filter-slide">
         <div v-if="filterMode === 'district'" class="filter-row no-scrollbar">
           <button class="filter-chip district-chip" :class="{ active: activeDistrict === '' }" @click="activeDistrict = ''">
@@ -227,13 +228,29 @@
           </button>
         </div>
       </transition>
+
+      <!-- Status filters -->
+      <transition name="filter-slide">
+        <div v-if="filterMode === 'status'" class="filter-row no-scrollbar">
+          <button class="filter-chip" :class="{ active: activeFilter === '' }" @click="activeFilter = ''">
+            <span class="filter-chip-dot"></span>Tất cả
+          </button>
+          <button class="filter-chip status-tried" :class="{ active: activeFilter === 'tried' }" @click="toggle('tried')">
+            ✓ Đã đi rồi
+            <span class="district-count">{{ triedCount }}</span>
+          </button>
+          <button class="filter-chip status-not-tried" :class="{ active: activeFilter === 'not_tried' }" @click="toggle('not_tried')">
+            ○ Chưa đi
+            <span class="district-count">{{ notTriedCount }}</span>
+          </button>
+        </div>
+      </transition>
     </div>
 
     <!-- ── Result info + quick-select ── -->
     <div class="result-bar">
       <span class="result-text">
         <span class="result-num">{{ filteredList.length }}</span> quán
-        <span v-if="searchQuery || activeFilter || activeDistrict"> được lọc</span>
       </span>
       <div class="quick-select">
         <button class="qs-btn" @click="selectAll">Chọn tất cả</button>
@@ -275,7 +292,7 @@
             <p class="check-name" :class="{ active: selectedIds.includes(place.id) }">
               {{ place.name }}
             </p>
-            <span v-if="place.experienced" class="exp-badge" title="Đã đi rồi">✓</span>
+            <span v-if="place.experienced" class="exp-badge">✓ Đã đi</span>
           </div>
           <div class="check-meta">
             <span v-if="place.price" class="check-price" :class="{ active: selectedIds.includes(place.id) }">
@@ -372,11 +389,10 @@ const winner        = ref<Restaurant | null>(null)
 const spinDuration  = ref(5500)
 const rotation      = ref(0)
 
-// Filter state
-const searchQuery   = ref('')
-const activeFilter  = ref('')
+const searchQuery    = ref('')
+const activeFilter   = ref('')
 const activeDistrict = ref('')
-const filterMode    = ref<'category' | 'district'>('category')
+const filterMode     = ref<'category' | 'district' | 'status'>('category')
 
 const WHEEL_SIZE = 310
 
@@ -384,7 +400,11 @@ const candidates = computed(() =>
   store.restaurants.filter(r => selectedIds.value.includes(r.id))
 )
 
-// ─── Available districts (with count) ────────────────
+// ── Counts ──────────────────────────────────────
+const triedCount    = computed(() => store.restaurants.filter(r => r.experienced).length)
+const notTriedCount = computed(() => store.restaurants.filter(r => !r.experienced).length)
+
+// ── Available districts ──────────────────────────
 const availableDistricts = computed(() =>
   DISTRICT_DEFS
     .map(d => ({
@@ -397,7 +417,19 @@ const availableDistricts = computed(() =>
 
 const districtOf = (address: string) => getDistrict(address)
 
-// ─── Filtered list for checklist ─────────────────────
+// ── Parse giá: "30k", "30.000", "30000" → số nghìn đồng
+const parseMinPrice = (price: string): number | null => {
+  if (!price) return null
+  const nums = price.match(/[\d.,]+/g)
+  if (!nums) return null
+  const values = nums.map(n => {
+    const raw = parseFloat(n.replace(/[.,]/g, ''))
+    return raw < 1000 ? raw : raw / 1000
+  })
+  return Math.min(...values)
+}
+
+// ── Filtered list ─────────────────────────────────
 const filteredList = computed(() => {
   let list = store.restaurants
 
@@ -410,16 +442,14 @@ const filteredList = computed(() => {
   }
 
   switch (activeFilter.value) {
-    case 'not_tried':
-      list = list.filter(r => !r.experienced); break
     case 'tried':
       list = list.filter(r => r.experienced); break
+    case 'not_tried':
+      list = list.filter(r => !r.experienced); break
     case 'cheap':
       list = list.filter(r => {
-        if (!r.price) return false
-        const nums = r.price.match(/\d+/g)
-        if (!nums) return false
-        return Math.min(...nums.map(Number)) <= 30
+        const min = parseMinPrice(r.price)
+        return min !== null && min <= 50
       }); break
     case 'has_pros':
       list = list.filter(r => r.advantage?.trim()); break
@@ -449,7 +479,7 @@ const filteredList = computed(() => {
 const toggle = (f: string) => { activeFilter.value = activeFilter.value === f ? '' : f }
 const resetFilters = () => { searchQuery.value = ''; activeFilter.value = ''; activeDistrict.value = '' }
 
-// ─── Quick-select (applies to filtered list) ─────────
+// ── Quick-select ──────────────────────────────────
 const selectAll = () => {
   const ids = new Set(selectedIds.value)
   filteredList.value.forEach(r => ids.add(r.id))
@@ -467,7 +497,7 @@ const randomSelect = () => {
   selectedIds.value = [...ids]
 }
 
-// ─── Wheel geometry ──────────────────────────────────
+// ── Wheel geometry ────────────────────────────────
 const segPath = (i: number, n: number, r: number) => {
   const a = (2 * Math.PI) / n
   const s = i * a - Math.PI / 2, e = s + a
@@ -496,7 +526,7 @@ const segFill = (i: number) => FILLS[i % FILLS.length]
 const segText = (i: number) => TEXTS[i % TEXTS.length]
 const shorten = (s: string, n: number) => s.length > n ? s.slice(0, n) + '…' : s
 
-// ─── Spin ─────────────────────────────────────────────
+// ── Spin ──────────────────────────────────────────
 const spin = () => {
   if (isSpinning.value || candidates.value.length < 2) return
   isSpinning.value = true
@@ -516,7 +546,11 @@ const spin = () => {
   setTimeout(() => {
     isSpinning.value = false
     winner.value = candidates.value[wi]
-    confetti({ particleCount: 180, spread: 100, origin: { y: 0.4 }, colors: ['#F5C4CF','#E8899A','#C9A96E','#7A2D45','#FDE8ED','#ffffff','#EAE6F0'], disableForReducedMotion: true })
+    confetti({
+      particleCount: 180, spread: 100, origin: { y: 0.4 },
+      colors: ['#F5C4CF','#E8899A','#C9A96E','#7A2D45','#FDE8ED','#ffffff','#EAE6F0'],
+      disableForReducedMotion: true,
+    })
     setTimeout(() => {
       confetti({ particleCount: 80, angle: 60, spread: 70, origin: { x: 0, y: 0.5 }, colors: ['#F5C4CF','#C9A96E','#ffffff'] })
       confetti({ particleCount: 80, angle: 120, spread: 70, origin: { x: 1, y: 0.5 }, colors: ['#E8899A','#7A2D45','#FDE8ED'] })
@@ -525,7 +559,7 @@ const spin = () => {
 }
 const spinAgain = () => { winner.value = null; setTimeout(spin, 200) }
 
-// ─── Helpers ─────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────
 const ICON_GRADS = [
   'background: linear-gradient(135deg, #FDE8ED, #F5C4CF);',
   'background: linear-gradient(135deg, #F0DEB8, #FDE8ED);',
@@ -558,7 +592,6 @@ function emoji(name: string): string {
 .hidden-check { display: none; }
 .roulette { padding: 20px 20px 130px; }
 
-/* ── Header ── */
 .roulette-head { text-align: center; margin-bottom: 28px; }
 .roulette-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); opacity: 0.8; margin-bottom: 8px; }
 .roulette-title { font-family: var(--font-display); font-size: 30px; font-weight: 400; color: var(--berry-dark); line-height: 1.3; margin-bottom: 8px; }
@@ -566,46 +599,18 @@ function emoji(name: string): string {
 .roulette-clover { display: inline-block; margin-left: 6px; }
 .roulette-hint { font-size: 12.5px; color: rgba(160,145,130,0.75); line-height: 1.5; }
 
-/* ── Wheel Zone ── */
-.wheel-zone {
-  position: relative; width: 340px; height: 340px;
-  margin: 0 auto 32px;
-  display: flex; align-items: center; justify-content: center;
-}
+/* ── Wheel ── */
+.wheel-zone { position: relative; width: 340px; height: 340px; margin: 0 auto 32px; display: flex; align-items: center; justify-content: center; }
 .wheel-outer-ring { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
-.wheel-outer-tick {
-  position: absolute; top: 0; left: 50%;
-  width: 2px; height: 10px; margin-left: -1px;
-  transform-origin: 1px 170px;
-  background: rgba(201,169,110,0.35); border-radius: 1px;
-}
-.wheel-glow-ring {
-  position: absolute; inset: -18px; border-radius: 50%;
-  background: conic-gradient(from 0deg,rgba(245,196,207,0.6),rgba(201,169,110,0.6),rgba(232,137,154,0.6),rgba(240,222,184,0.5),rgba(234,230,240,0.5),rgba(245,196,207,0.6));
-  filter: blur(18px); opacity: 0; transition: opacity 0.8s ease;
-  animation: rotateSlow 6s linear infinite;
-}
+.wheel-outer-tick { position: absolute; top: 0; left: 50%; width: 2px; height: 10px; margin-left: -1px; transform-origin: 1px 170px; background: rgba(201,169,110,0.35); border-radius: 1px; }
+.wheel-glow-ring { position: absolute; inset: -18px; border-radius: 50%; background: conic-gradient(from 0deg,rgba(245,196,207,0.6),rgba(201,169,110,0.6),rgba(232,137,154,0.6),rgba(240,222,184,0.5),rgba(234,230,240,0.5),rgba(245,196,207,0.6)); filter: blur(18px); opacity: 0; transition: opacity 0.8s ease; animation: rotateSlow 6s linear infinite; }
 .wheel-glow-ring.spinning { opacity: 1; }
 .wheel-container { position: absolute; width: 310px; height: 310px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
-.wheel-empty {
-  position: absolute; inset: 0; border-radius: 50%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  border: 2.5px dashed rgba(201,169,110,0.42); background: rgba(250,247,242,0.55);
-  text-align: center; padding: 24px;
-}
+.wheel-empty { position: absolute; inset: 0; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2.5px dashed rgba(201,169,110,0.42); background: rgba(250,247,242,0.55); text-align: center; padding: 24px; }
 .wheel-empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.45; }
 .wheel-empty p { font-family: var(--font-accent); font-style: italic; font-size: 15px; color: rgba(160,145,130,0.75); line-height: 1.6; }
-.wheel-svg-wrap {
-  position: absolute; inset: 0; border-radius: 50%; overflow: hidden;
-  box-shadow: 0 12px 60px rgba(90,31,48,0.32), 0 4px 16px rgba(90,31,48,0.15), inset 0 0 0 5px rgba(255,255,255,0.6), inset 0 0 0 7px rgba(201,169,110,0.18);
-  will-change: transform;
-}
-.wheel-hub {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-  width: 60px; height: 60px; border-radius: 50%; background: white;
-  box-shadow: 0 6px 24px rgba(90,31,48,0.25), inset 0 1px 0 rgba(255,255,255,0.95);
-  display: flex; align-items: center; justify-content: center; z-index: 10;
-}
+.wheel-svg-wrap { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; box-shadow: 0 12px 60px rgba(90,31,48,0.32), 0 4px 16px rgba(90,31,48,0.15), inset 0 0 0 5px rgba(255,255,255,0.6), inset 0 0 0 7px rgba(201,169,110,0.18); will-change: transform; }
+.wheel-hub { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 60px; height: 60px; border-radius: 50%; background: white; box-shadow: 0 6px 24px rgba(90,31,48,0.25), inset 0 1px 0 rgba(255,255,255,0.95); display: flex; align-items: center; justify-content: center; z-index: 10; }
 .wheel-hub-ring { position: absolute; inset: 5px; border-radius: 50%; border: 1.5px solid rgba(201,169,110,0.4); }
 .wheel-hub-inner { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg,#7A2D45,#C45B6E); box-shadow: 0 3px 10px rgba(122,45,69,0.55); }
 .wheel-label { user-select: none; pointer-events: none; }
@@ -614,16 +619,9 @@ function emoji(name: string): string {
 .pointer-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 36px; height: 36px; border-radius: 50%; background: radial-gradient(circle,rgba(232,137,154,0.8),transparent); filter: blur(8px); opacity: 0; transition: opacity 0.4s; pointer-events: none; }
 .pointer-glow.active { opacity: 1; animation: pulseGlow 0.5s ease-in-out infinite; }
 
-/* ── Spin Button ── */
+/* ── Spin ── */
 .spin-btn-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
-.spin-btn {
-  position: relative; padding: 17px 42px; border-radius: 26px; border: none; color: white;
-  font-family: var(--font-body); font-size: 16px; font-weight: 700; letter-spacing: 0.02em;
-  cursor: pointer; display: flex; align-items: center; gap: 10px;
-  background: linear-gradient(135deg,#5A1F30 0%,#7A2D45 30%,#C45B6E 70%,#E8899A 100%);
-  box-shadow: 0 14px 40px rgba(122,45,69,0.48), 0 4px 12px rgba(122,45,69,0.3);
-  overflow: hidden; transition: transform 0.2s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.2s ease;
-}
+.spin-btn { position: relative; padding: 17px 42px; border-radius: 26px; border: none; color: white; font-family: var(--font-body); font-size: 16px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg,#5A1F30 0%,#7A2D45 30%,#C45B6E 70%,#E8899A 100%); box-shadow: 0 14px 40px rgba(122,45,69,0.48), 0 4px 12px rgba(122,45,69,0.3); overflow: hidden; transition: transform 0.2s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.2s ease; }
 .spin-btn:not(:disabled):hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 52px rgba(122,45,69,0.58); }
 .spin-btn:not(:disabled):active { transform: scale(0.96); }
 .spin-btn:disabled { opacity: 0.75; cursor: not-allowed; }
@@ -642,44 +640,34 @@ function emoji(name: string): string {
 /* ── Search ── */
 .search-wrap { position: relative; margin-bottom: 14px; }
 .search-icon-wrap { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; }
-.search-input {
-  width: 100%; padding: 13px 44px 13px 44px; border-radius: 18px;
-  border: 1px solid rgba(201,169,110,0.28); background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(14px); font-family: var(--font-body); font-size: 13.5px; color: var(--plum);
-  outline: none; box-shadow: 0 2px 16px rgba(90,31,48,0.06); transition: all 0.25s ease;
-}
+.search-input { width: 100%; padding: 13px 44px; border-radius: 18px; border: 1px solid rgba(201,169,110,0.28); background: rgba(255,255,255,0.72); backdrop-filter: blur(14px); font-family: var(--font-body); font-size: 13.5px; color: var(--plum); outline: none; box-shadow: 0 2px 16px rgba(90,31,48,0.06); transition: all 0.25s ease; }
 .search-input::placeholder { color: rgba(160,145,130,0.7); }
 .search-input:focus { border-color: rgba(232,137,154,0.55); box-shadow: 0 0 0 4px rgba(232,137,154,0.1), 0 4px 20px rgba(90,31,48,0.08); background: rgba(255,255,255,0.88); }
 .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(0,0,0,0.07); color: var(--berry); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .search-clear:hover { background: rgba(0,0,0,0.12); }
 
-/* ── Filter Section ── */
+/* ── Filter ── */
 .filter-section { margin-bottom: 12px; }
-.filter-switcher { display: flex; gap: 6px; margin-bottom: 10px; background: rgba(255,255,255,0.55); border: 1px solid rgba(201,169,110,0.22); border-radius: 12px; padding: 3px; width: fit-content; }
-.fsw-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 9px; border: none; background: transparent; font-family: var(--font-body); font-size: 11.5px; font-weight: 600; color: rgba(120,100,100,0.65); cursor: pointer; transition: all 0.22s ease; -webkit-tap-highlight-color: transparent; }
+.filter-switcher { display: flex; gap: 5px; margin-bottom: 10px; background: rgba(255,255,255,0.55); border: 1px solid rgba(201,169,110,0.22); border-radius: 12px; padding: 3px; width: fit-content; }
+.fsw-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 9px; border: none; background: transparent; font-family: var(--font-body); font-size: 11px; font-weight: 600; color: rgba(120,100,100,0.65); cursor: pointer; transition: all 0.22s ease; -webkit-tap-highlight-color: transparent; }
 .fsw-btn.active { background: linear-gradient(135deg,rgba(122,45,69,0.9),rgba(196,91,110,0.85)); color: white; box-shadow: 0 4px 14px rgba(122,45,69,0.3); }
 .filter-row { display: flex; gap: 7px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
 .filter-slide-enter-active, .filter-slide-leave-active { transition: opacity 0.2s ease, transform 0.22s ease; }
 .filter-slide-enter-from { opacity: 0; transform: translateY(-5px); }
 .filter-slide-leave-to { opacity: 0; transform: translateY(4px); }
-.filter-chip {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 7px 13px; border-radius: 100px;
-  border: 1.5px solid rgba(201,169,110,0.28); background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(10px); font-family: var(--font-body); font-size: 11.5px; font-weight: 600;
-  color: rgba(120,100,100,0.75); cursor: pointer; white-space: nowrap; scroll-snap-align: start;
-  transition: all 0.22s cubic-bezier(0.34,1.2,0.64,1); -webkit-tap-highlight-color: transparent;
-}
+.filter-chip { display: inline-flex; align-items: center; gap: 4px; padding: 7px 13px; border-radius: 100px; border: 1.5px solid rgba(201,169,110,0.28); background: rgba(255,255,255,0.65); backdrop-filter: blur(10px); font-family: var(--font-body); font-size: 11.5px; font-weight: 600; color: rgba(120,100,100,0.75); cursor: pointer; white-space: nowrap; scroll-snap-align: start; transition: all 0.22s cubic-bezier(0.34,1.2,0.64,1); -webkit-tap-highlight-color: transparent; }
 .filter-chip:hover { border-color: rgba(232,137,154,0.45); color: var(--berry); background: rgba(253,232,237,0.6); transform: translateY(-1px); }
 .filter-chip:active { transform: scale(0.95); }
 .filter-chip.active { background: linear-gradient(135deg,rgba(122,45,69,0.9),rgba(196,91,110,0.85)); border-color: transparent; color: white; box-shadow: 0 5px 18px rgba(122,45,69,0.35); transform: translateY(-1px); }
 .filter-chip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
 .filter-chip.active .filter-chip-dot { background: white; opacity: 0.8; animation: pulseGlow 1.8s ease-in-out infinite; }
+.status-tried.active { background: linear-gradient(135deg, #2D7A45, #4CAF75); box-shadow: 0 5px 18px rgba(45,122,69,0.35); }
+.status-not-tried.active { background: linear-gradient(135deg, #7A5D2D, #C9956E); box-shadow: 0 5px 18px rgba(122,93,45,0.35); }
 .district-chip { gap: 3px; }
 .district-count { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; border-radius: 100px; background: rgba(0,0,0,0.08); font-size: 9.5px; font-weight: 700; padding: 0 4px; }
 .filter-chip.active .district-count { background: rgba(255,255,255,0.25); }
 
-/* ── Result bar + quick-select ── */
+/* ── Result bar ── */
 .result-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 0 2px; gap: 10px; flex-wrap: wrap; }
 .result-text { font-size: 12px; color: rgba(150,130,120,0.8); flex-shrink: 0; }
 .result-num { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--berry); }
@@ -696,14 +684,7 @@ function emoji(name: string): string {
 
 /* ── Checklist ── */
 .checklist { display: flex; flex-direction: column; gap: 8px; }
-.check-item {
-  display: flex; align-items: center; gap: 11px; padding: 12px 14px;
-  border-radius: 18px; cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.34,1.2,0.64,1);
-  user-select: none; -webkit-tap-highlight-color: transparent;
-  background: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.9);
-  box-shadow: 0 2px 8px rgba(90,31,48,0.04);
-}
+.check-item { display: flex; align-items: center; gap: 11px; padding: 12px 14px; border-radius: 18px; cursor: pointer; transition: all 0.25s cubic-bezier(0.34,1.2,0.64,1); user-select: none; -webkit-tap-highlight-color: transparent; background: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 2px 8px rgba(90,31,48,0.04); }
 .check-item.checked { background: rgba(245,196,207,0.38); border-color: rgba(122,45,69,0.2); box-shadow: 0 6px 24px rgba(122,45,69,0.1); transform: scale(1.01); }
 .check-item:active { transform: scale(0.975); }
 .check-ring { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(0,0,0,0.06); border: 1.5px solid rgba(122,45,69,0.22); transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1); }
@@ -713,24 +694,24 @@ function emoji(name: string): string {
 .check-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
 .check-name { font-family: var(--font-display); font-size: 14.5px; font-weight: 600; color: rgba(120,100,100,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.25s; flex: 1; min-width: 0; }
 .check-name.active { color: var(--berry-dark); }
-.exp-badge { flex-shrink: 0; font-size: 10px; font-weight: 700; color: var(--sage); background: rgba(141,170,140,0.18); border: 1px solid rgba(141,170,140,0.3); border-radius: 100px; padding: 1px 7px; white-space: nowrap; }
+.exp-badge { flex-shrink: 0; font-size: 10px; font-weight: 700; color: #2D7A45; background: rgba(45,122,69,0.12); border: 1px solid rgba(45,122,69,0.28); border-radius: 100px; padding: 2px 7px; white-space: nowrap; }
 .check-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .check-price { font-size: 10.5px; color: rgba(190,165,150,0.8); transition: color 0.25s; }
 .check-price.active { color: var(--rose-deep); opacity: 0.85; }
 .check-district { font-size: 10px; color: rgba(180,140,150,0.75); white-space: nowrap; }
 
-/* ── Empty list state ── */
+/* ── Empty list ── */
 .list-empty { text-align: center; padding: 40px 20px; }
 .list-empty-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
 .list-empty p { font-family: var(--font-accent); font-style: italic; font-size: 15px; color: rgba(160,145,130,0.65); margin-bottom: 14px; }
 .clear-filter-btn { padding: 8px 18px; border-radius: 100px; border: 1.5px solid rgba(122,45,69,0.22); background: rgba(245,196,207,0.3); font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--berry); cursor: pointer; transition: all 0.2s; }
 .clear-filter-btn:hover { background: rgba(245,196,207,0.5); }
 
-/* ── Fade scale transition ── */
+/* ── Fade scale ── */
 .fade-scale-enter-active, .fade-scale-leave-active { transition: all 0.2s ease; }
 .fade-scale-enter-from, .fade-scale-leave-to { opacity: 0; transform: translateY(-50%) scale(0.7); }
 
-/* ══ WINNER MODAL ══ */
+/* ── Winner Modal ── */
 .modal-overlay { position: fixed; inset: 0; z-index: 70; display: flex; align-items: flex-end; justify-content: center; padding: 0 16px 28px; background: rgba(61,26,38,0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 .winner-card { width: 100%; max-width: 400px; border-radius: 36px; overflow: hidden; background: #FAF7F2; box-shadow: 0 24px 80px rgba(90,31,48,0.38), 0 8px 24px rgba(90,31,48,0.2); }
 .winner-band { height: 5px; background: linear-gradient(90deg,#7A2D45,#C45B6E,#E8899A,#C9A96E,#E8899A,#C45B6E,#7A2D45); background-size: 200% auto; animation: borderShimmer 3s linear infinite; }
