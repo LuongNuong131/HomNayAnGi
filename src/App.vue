@@ -30,7 +30,7 @@
         <h1 class="brand-title shimmer-text">LuNu</h1>
         <p class="brand-sub">
           <span class="amp">&</span>
-          <span class="sub-name">Bé Yêu</span>
+          <span class="sub-name">Chúc Mieee</span>
           <span class="float-icon" style="animation: floatSlow 5s ease-in-out infinite;">🌸</span>
         </p>
       </div>
