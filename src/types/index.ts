@@ -6,4 +6,5 @@ export interface Restaurant {
   advantage: string;
   disadvantages: string;
   linkmap: string;
+  experienced: boolean;
 }

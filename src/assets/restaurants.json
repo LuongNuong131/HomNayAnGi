@@ -6,7 +6,8 @@
     "address": "66 Đ. Số 2, Hạnh Thông, Hồ Chí Minh",
     "advantage": "Đồ ăn ngon, sốt ngon",
     "disadvantages": "Khẩu phần ít, khoai mang về nhà bị mền",
-    "linkmap": "https://maps.app.goo.gl/1audN5nh8hf5Mtea9"
+    "linkmap": "https://maps.app.goo.gl/1audN5nh8hf5Mtea9",
+    "experienced": false
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "address": "620 QL1A, Khu phố 1, An Phú Đông, Hồ Chí Minh",
     "advantage": "Hàu tươi, ngon, giá rẻ",
     "disadvantages": "Ở ngoài QL1 xe đông ồn, gia vị nướng hơi nhạt",
-    "linkmap": "https://maps.app.goo.gl/9XiJvVG9tYcp3Svk9"
+    "linkmap": "https://maps.app.goo.gl/9XiJvVG9tYcp3Svk9",
+    "experienced": false
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "address": "48/5 Đường Nguyễn Hữu Cầu, Mỹ Huề, Bà Điểm, Hồ Chí Minh",
     "advantage": "Ngon",
     "disadvantages": "Ngán",
-    "linkmap": "https://maps.app.goo.gl/764rFDwLXfpyDNEa6"
+    "linkmap": "https://maps.app.goo.gl/764rFDwLXfpyDNEa6",
+    "experienced": false
   },
   {
     "id": 4,
@@ -33,7 +36,8 @@
     "address": "43 Đ. Tô Ký, Đông Hưng Thuận, Hồ Chí Minh",
     "advantage": "Lòng không bị hôi, nước ngon",
     "disadvantages": "Mì trộn cay, chấm bánh mì không ngon lắm",
-    "linkmap": "https://maps.app.goo.gl/MKLfNog7989msdzk9"
+    "linkmap": "https://maps.app.goo.gl/MKLfNog7989msdzk9",
+    "experienced": false
   },
   {
     "id": 5,
@@ -42,7 +46,8 @@
     "address": "2665 Đ. Song Hành, P, Đông Hưng Thuận, Hồ Chí Minh",
     "advantage": "Nước ngon, rẻ",
     "disadvantages": "Trái cây tùy người múc nhiều hay ít",
-    "linkmap": "https://maps.app.goo.gl/B7SA5eQ6CStPcxDK6"
+    "linkmap": "https://maps.app.goo.gl/B7SA5eQ6CStPcxDK6",
+    "experienced": false
   },
   {
     "id": 6,
@@ -51,7 +56,8 @@
     "address": "59/6A D. Vạn Hạnh 3, Bà Điểm, Hồ Chí Minh",
     "advantage": "Giòn, ngon, quán dễ thương",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/8suwtLBJBrWSRV1k9"
+    "linkmap": "https://maps.app.goo.gl/8suwtLBJBrWSRV1k9",
+    "experienced": false
   },
   {
     "id": 7,
@@ -60,7 +66,8 @@
     "address": "184/6 Lý Chính Thắng, Nhiêu Lộc, Hồ Chí Minh",
     "advantage": "Trứng lòng đào, có tóp mỡ",
     "disadvantages": "Xa vãiiiiii",
-    "linkmap": "https://maps.app.goo.gl/JiHyg871w5p8Mbsv6"
+    "linkmap": "https://maps.app.goo.gl/JiHyg871w5p8Mbsv6",
+    "experienced": false
   },
   {
     "id": 8,
@@ -69,7 +76,8 @@
     "address": "153 Đ.Nguyễn Văn Nghi, Hạnh Thông, Hồ Chí Minh",
     "advantage": "Nước, bánh tráng free, đậu ngon",
     "disadvantages": "Không có nước mắm ngọt",
-    "linkmap": "https://maps.app.goo.gl/RHHTykKh1pby4GJh6"
+    "linkmap": "https://maps.app.goo.gl/RHHTykKh1pby4GJh6",
+    "experienced": false
   },
   {
     "id": 9,
@@ -78,7 +86,8 @@
     "address": "509 Thị Mười, Tân Thới Hiệp, Hồ Chí Minh",
     "advantage": "Có canh rong biển, tóp mỡ, rẻ",
     "disadvantages": "Có lúc thịt nhiều mỡ -> ngán",
-    "linkmap": "https://maps.app.goo.gl/81zbvAGhYrbixuS97"
+    "linkmap": "https://maps.app.goo.gl/81zbvAGhYrbixuS97",
+    "experienced": false
   },
   {
     "id": 10,
@@ -87,7 +96,8 @@
     "address": "19A Đ. Nguyễn Ảnh Thủ, P, Tân Thới Hiệp, Hồ Chí Minh",
     "advantage": "Ngon",
     "disadvantages": "Độ cay tùy tâm trạng nhân viên",
-    "linkmap": "https://maps.app.goo.gl/ZfZfbNYBy7jYfdHz7"
+    "linkmap": "https://maps.app.goo.gl/ZfZfbNYBy7jYfdHz7",
+    "experienced": false
   },
   {
     "id": 11,
@@ -96,7 +106,8 @@
     "address": "624 Đ. Lê Đức Thọ, An Hội Đông, Hồ Chí Minh",
     "advantage": "Rẻ, nhiều bơ",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/n1WKuEpee1pNAm67A"
+    "linkmap": "https://maps.app.goo.gl/n1WKuEpee1pNAm67A",
+    "experienced": false
   },
   {
     "id": 12,
@@ -105,7 +116,8 @@
     "address": "12 Nguyễn Văn Bảo, Hạnh Thông, Hồ Chí Minh",
     "advantage": "Ngon, rẻ",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/gPbbEeqNQGV8xBGL9"
+    "linkmap": "https://maps.app.goo.gl/gPbbEeqNQGV8xBGL9",
+    "experienced": false
   },
   {
     "id": 13,
@@ -114,7 +126,8 @@
     "address": "108 Lê Hồng Phong, Phú Lợi, Hồ Chí Minh",
     "advantage": "Tự múc, khúc bạch ngon",
     "disadvantages": "Xa vãi cớttttttt",
-    "linkmap": "https://maps.app.goo.gl/Q551NU4GFGfTtotd7"
+    "linkmap": "https://maps.app.goo.gl/Q551NU4GFGfTtotd7",
+    "experienced": false
   },
   {
     "id": 14,
@@ -123,7 +136,8 @@
     "address": "12/1 Đường số 9, khu phố 3, Linh Xuân, Hồ Chí Minh",
     "advantage": "Nhiều topping, ngon rẻ",
     "disadvantages": "Đông khách",
-    "linkmap": "https://maps.app.goo.gl/uPKunAXiDheP6gDR8"
+    "linkmap": "https://maps.app.goo.gl/uPKunAXiDheP6gDR8",
+    "experienced": false
   },
   {
     "id": 15,
@@ -132,7 +146,8 @@
     "address": "116 Thị Mười, Tân Thới Hiệp, Hồ Chí Minh (gần sân Cầu Suối)",
     "advantage": "Có bắp",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/izN6r8g8YqoHwZgs8"
+    "linkmap": "https://maps.app.goo.gl/izN6r8g8YqoHwZgs8",
+    "experienced": false
   },
   {
     "id": 16,
@@ -141,7 +156,8 @@
     "address": "37 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh (trước cổng trường)",
     "advantage": "Có bắp, thịt, ngon vãiiiiii",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/4nRaSJi5wFG1stYW9"
+    "linkmap": "https://maps.app.goo.gl/4nRaSJi5wFG1stYW9",
+    "experienced": false
   },
   {
     "id": 17,
@@ -150,7 +166,8 @@
     "address": "644 Đ. Nguyễn Văn Quá, Đông Hưng Thuận, Hồ Chí Minh",
     "advantage": "Ngon",
     "disadvantages": "Ít món, y như quán bún đậu",
-    "linkmap": "https://maps.app.goo.gl/52jH4Feqtbq4bBWX8"
+    "linkmap": "https://maps.app.goo.gl/52jH4Feqtbq4bBWX8",
+    "experienced": false
   },
   {
     "id": 18,
@@ -159,7 +176,8 @@
     "address": "149 Đ. Lê Đức Thọ, Gò Vấp, Hồ Chí Minh",
     "advantage": "Ngon",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/ZrGn2JPuQ1EWWnLx5"
+    "linkmap": "https://maps.app.goo.gl/ZrGn2JPuQ1EWWnLx5",
+    "experienced": false
   },
   {
     "id": 19,
@@ -168,7 +186,8 @@
     "address": "633 Đ. Tô Ký, Quận 12 (Đối diện ĐH Lao động)",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/mAHLUjXVRBQkoy8k8"
+    "linkmap": "https://maps.app.goo.gl/mAHLUjXVRBQkoy8k8",
+    "experienced": false
   },
   {
     "id": 20,
@@ -177,7 +196,8 @@
     "address": "781 Hoàng Sa, Nhiêu Lộc, Hồ Chí Minh",
     "advantage": "Mix nhiều nhân",
     "disadvantages": "Khá ngán",
-    "linkmap": "https://maps.app.goo.gl/8c64owyPUDvRZppG9"
+    "linkmap": "https://maps.app.goo.gl/8c64owyPUDvRZppG9",
+    "experienced": false
   },
   {
     "id": 21,
@@ -186,7 +206,8 @@
     "address": "121/3 Đ. Phan Văn Hớn, X, Bà Điểm, Hồ Chí Minh",
     "advantage": "Bánh tráng cuộn trứng cút lòng đào",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/Rvnuh732PcTT8fhL7"
+    "linkmap": "https://maps.app.goo.gl/Rvnuh732PcTT8fhL7",
+    "experienced": false
   },
   {
     "id": 22,
@@ -195,7 +216,8 @@
     "address": "176 Trường Chinh, Phường, Đông Hưng Thuận, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/QmFL8p6RRkha7hLt7"
+    "linkmap": "https://maps.app.goo.gl/QmFL8p6RRkha7hLt7",
+    "experienced": false
   },
   {
     "id": 23,
@@ -204,7 +226,8 @@
     "address": "769 Quang Trung, An Hội Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/SwrGCa8rQwUup7ta7"
+    "linkmap": "https://maps.app.goo.gl/SwrGCa8rQwUup7ta7",
+    "experienced": false
   },
   {
     "id": 24,
@@ -213,7 +236,8 @@
     "address": "161 Đ.Nguyễn Văn Nghi, Hạnh Thông, Hồ Chí Minh (kế bên quán Dê)",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/wTRLTJWwh7pWZJnv8"
+    "linkmap": "https://maps.app.goo.gl/wTRLTJWwh7pWZJnv8",
+    "experienced": false
   },
   {
     "id": 25,
@@ -222,7 +246,8 @@
     "address": "55 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/fLGGv58D5CGo1Mtj9"
+    "linkmap": "https://maps.app.goo.gl/fLGGv58D5CGo1Mtj9",
+    "experienced": false
   },
   {
     "id": 26,
@@ -231,7 +256,8 @@
     "address": "59/4 Đ. Nguyễn Ảnh Thủ, Bà Điểm, Hồ Chí Minh, Việt Nam",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/EqDC45e5hQiTkqk17"
+    "linkmap": "https://maps.app.goo.gl/EqDC45e5hQiTkqk17",
+    "experienced": false
   },
   {
     "id": 27,
@@ -240,7 +266,8 @@
     "address": "118 Thị Mười, Trung Mỹ Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "Dở",
-    "linkmap": "https://maps.app.goo.gl/ttmH67PB5sgZNFL77"
+    "linkmap": "https://maps.app.goo.gl/ttmH67PB5sgZNFL77",
+    "experienced": false
   },
   {
     "id": 28,
@@ -249,7 +276,8 @@
     "address": "140 Đ. Tam Đảo, Diên Hồng, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/Lq3qDmxiRzwjbLus8"
+    "linkmap": "https://maps.app.goo.gl/Lq3qDmxiRzwjbLus8",
+    "experienced": false
   },
   {
     "id": 29,
@@ -258,7 +286,8 @@
     "address": "126/6 Phan Xích Long, Gia Định, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/n2z79z7pbPZQJ65f6"
+    "linkmap": "https://maps.app.goo.gl/n2z79z7pbPZQJ65f6",
+    "experienced": false
   },
   {
     "id": 30,
@@ -267,16 +296,18 @@
     "address": "530-532 Đ. Phan Văn Trị, Hạnh Thông, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/mkZkjR5fkTfUc3PE9"
+    "linkmap": "https://maps.app.goo.gl/mkZkjR5fkTfUc3PE9",
+    "experienced": false
   },
   {
     "id": 31,
     "name": "Bánh mì chảo Bamboo",
     "price": "",
-    "address": "Hẻm 47/24/33 Hẻm 47/52 Bùi Đình Túy, Bình Thạnh, Hồ Chí Minh",
+    "address": "Hẻm 47/24/33 Bùi Đình Túy, Bình Thạnh, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/3qsLnBuntyXDmu11A"
+    "linkmap": "https://maps.app.goo.gl/3qsLnBuntyXDmu11A",
+    "experienced": false
   },
   {
     "id": 32,
@@ -285,7 +316,8 @@
     "address": "45 Đ. Ung Văn Khiêm, Thạnh Mỹ Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/82e3CbXvRAHfULq88"
+    "linkmap": "https://maps.app.goo.gl/82e3CbXvRAHfULq88",
+    "experienced": false
   },
   {
     "id": 33,
@@ -294,7 +326,8 @@
     "address": "RP57+GJ9, Chợ, Thạnh Mỹ Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/6D4TSzRajq1XcLQe9"
+    "linkmap": "https://maps.app.goo.gl/6D4TSzRajq1XcLQe9",
+    "experienced": false
   },
   {
     "id": 34,
@@ -303,7 +336,8 @@
     "address": "25 Đ. Tân Chánh Hiệp 07, Khu phố 10, Trung Mỹ Tây, Hồ Chí Minh",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/v12ureB5VwS5t1qPA"
+    "linkmap": "https://maps.app.goo.gl/v12ureB5VwS5t1qPA",
+    "experienced": false
   },
   {
     "id": 35,
@@ -312,6 +346,7 @@
     "address": "78 Đ. Số 8, Linh Xuân, Hồ Chí Minh (Đối diện cổng 2 đại học Kinh Tế)",
     "advantage": "",
     "disadvantages": "",
-    "linkmap": "https://maps.app.goo.gl/aE9Uw33FctHKYBPBA"
+    "linkmap": "https://maps.app.goo.gl/aE9Uw33FctHKYBPBA",
+    "experienced": false
   }
 ]
