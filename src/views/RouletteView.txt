@@ -14,10 +14,7 @@
     <!-- ── Wheel Zone ── -->
     <div class="wheel-zone">
 
-      <!-- Decorative outer rings -->
-      <div class="wheel-outer-ring">
-        <div class="wheel-outer-tick" v-for="i in 36" :key="i" :style="`transform: rotate(${i*10}deg)`"></div>
-      </div>
+      <!-- Outer glow ring (spinning) -->
       <div class="wheel-glow-ring" :class="{ spinning: isSpinning }"></div>
 
       <!-- Wheel container -->
@@ -33,109 +30,59 @@
         <div
           v-else
           class="wheel-svg-wrap"
-          :style="{ transform: `rotate(${rotation}deg)`, transition: isSpinning ? `transform ${spinDuration}ms cubic-bezier(0.08, 0.82, 0.12, 1.0)` : 'none' }"
+          :class="{ 'spin-ease': isSpinning }"
+          :style="{ transform: `rotate(${rotation}deg)` }"
         >
-          <svg :width="WHEEL_SIZE" :height="WHEEL_SIZE" :viewBox="`0 0 ${WHEEL_SIZE} ${WHEEL_SIZE}`">
+          <svg width="290" height="290" viewBox="0 0 290 290">
             <defs>
-              <filter id="seg-shadow" x="-5%" y="-5%" width="110%" height="110%">
-                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.12"/>
+              <filter id="seg-shadow">
+                <feDropShadow dx="0" dy="0" stdDeviation="3" flood-opacity="0.08"/>
               </filter>
-              <!-- Radial gradient for each segment depth -->
-              <radialGradient id="segLight" cx="30%" cy="30%" r="70%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.28)"/>
-                <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-              </radialGradient>
-              <!-- Outer border gradient ring -->
-              <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#C9A96E"/>
-                <stop offset="50%" stop-color="#E8899A"/>
-                <stop offset="100%" stop-color="#C9A96E"/>
-              </linearGradient>
             </defs>
-            <g :transform="`translate(${WHEEL_SIZE/2},${WHEEL_SIZE/2})`">
-              <!-- Outer decorative rim -->
-              <circle r="143" fill="none" stroke="url(#rimGrad)" stroke-width="3.5" opacity="0.65"/>
-              <circle r="139" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-
-              <!-- Segments -->
+            <g transform="translate(145,145)">
               <path
                 v-for="(p, i) in candidates" :key="p.id"
-                :d="segPath(i, candidates.length, 135)"
+                :d="segPath(i, candidates.length, 140)"
                 :fill="segFill(i)"
-                stroke="rgba(255,255,255,0.75)"
+                stroke="rgba(255,255,255,0.65)"
                 stroke-width="1.8"
                 filter="url(#seg-shadow)"
               />
-
-              <!-- Segment light overlay -->
-              <path
-                v-for="(p, i) in candidates" :key="'light'+p.id"
-                :d="segPath(i, candidates.length, 135)"
-                fill="url(#segLight)"
-                stroke="none"
-                opacity="0.5"
-              />
-
               <!-- Segment labels -->
-              <g v-for="(p, i) in candidates" :key="'t'+p.id">
-                <!-- Emoji -->
-                <text
-                  :transform="emojiTransform(i, candidates.length)"
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                  :font-size="candidates.length > 10 ? 12 : 15"
-                >{{ segEmoji(p.name) }}</text>
-                <!-- Name -->
-                <text
-                  :transform="labelTransform(i, candidates.length)"
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                  :font-size="candidates.length > 10 ? 8.5 : candidates.length > 6 ? 9.5 : 10.5"
-                  font-family="Cormorant Garamond, serif"
-                  font-weight="700"
-                  :fill="segText(i)"
-                  class="wheel-label"
-                >
-                  {{ shorten(p.name, candidates.length > 10 ? 8 : candidates.length > 6 ? 11 : 14) }}
-                </text>
-              </g>
-
-              <!-- Inner decorative ring -->
-              <circle r="32" fill="white" filter="url(#seg-shadow)"/>
-              <circle r="28" fill="none" stroke="url(#rimGrad)" stroke-width="2" opacity="0.8"/>
+              <text
+                v-for="(p, i) in candidates" :key="'t'+p.id"
+                :transform="labelTransform(i, candidates.length)"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                :font-size="candidates.length > 8 ? 9.5 : 11.5"
+                font-family="Cormorant Garamond, serif"
+                font-weight="600"
+                :fill="segText(i)"
+                class="wheel-label"
+              >
+                {{ shorten(p.name, candidates.length > 8 ? 10 : 15) }}
+              </text>
             </g>
           </svg>
 
           <!-- Center hub -->
           <div class="wheel-hub">
-            <div class="wheel-hub-ring"></div>
             <div class="wheel-hub-inner"></div>
           </div>
         </div>
 
         <!-- Pointer -->
         <div v-if="candidates.length >= 2" class="wheel-pointer">
-          <svg viewBox="0 0 28 36" fill="none" class="pointer-svg">
-            <filter id="ptr-shadow">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.35"/>
-            </filter>
-            <path
-              d="M14 35 L3 11 C1 6, 5 1.5, 14 1.5 C23 1.5, 27 6, 25 11 Z"
-              fill="url(#pGrad2)"
-              stroke="white"
-              stroke-width="1.5"
-              filter="url(#ptr-shadow)"
-            />
-            <circle cx="14" cy="9" r="4.5" fill="white" opacity="0.5"/>
+          <svg viewBox="0 0 22 28" fill="none" class="pointer-svg">
+            <path d="M11 28 L2 9 C0.5 5, 4 1.5, 11 1.5 C18 1.5, 21.5 5, 20 9 Z"
+                  fill="url(#pGrad)" stroke="white" stroke-width="1.2"/>
             <defs>
-              <linearGradient id="pGrad2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#5A1F30"/>
+              <linearGradient id="pGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7A2D45"/>
                 <stop offset="100%" stop-color="#C45B6E"/>
               </linearGradient>
             </defs>
           </svg>
-          <!-- Pointer glow when spinning -->
-          <div class="pointer-glow" :class="{ active: isSpinning }"></div>
         </div>
 
       </div>
@@ -150,7 +97,9 @@
         :disabled="isSpinning"
         @click="spin"
       >
+        <!-- Shimmer layer -->
         <div class="spin-btn-shimmer"></div>
+        <!-- Ripple on active -->
         <div v-if="isSpinning" class="spin-ripple"></div>
 
         <span class="spin-icon" :class="{ 'spin-anim': isSpinning }">
@@ -181,13 +130,6 @@
       <div class="check-header-line"></div>
       <span class="check-header-text">Chọn quán ăn</span>
       <div class="check-header-line"></div>
-    </div>
-
-    <!-- ── Quick-select buttons ── -->
-    <div class="quick-select">
-      <button class="qs-btn" @click="selectAll">Chọn tất cả</button>
-      <button class="qs-btn" @click="clearAll">Bỏ chọn</button>
-      <button class="qs-btn qs-random" @click="randomSelect">🎲 Chọn ngẫu nhiên</button>
     </div>
 
     <!-- ── Checklist ── -->
@@ -245,17 +187,15 @@
                 <!-- BG blobs -->
                 <div class="winner-blob-1"></div>
                 <div class="winner-blob-2"></div>
-                <div class="winner-blob-3"></div>
 
                 <div class="winner-content">
                   <!-- Celebration -->
                   <div class="winner-celebrate">
                     <div class="winner-emoji-ring">
                       <div class="winner-ripple"></div>
-                      <div class="winner-ripple winner-ripple-2"></div>
-                      <span class="winner-emoji">{{ emoji(winner.name) }}</span>
+                      <span class="winner-emoji">🎉</span>
                     </div>
-                    <div class="winner-stars shimmer-text">✦ ✦ ✦</div>
+                    <div class="winner-stars">✦ ✦ ✦</div>
                   </div>
 
                   <p class="winner-eyebrow">Quyết định rồi cưng ơi!</p>
@@ -275,22 +215,15 @@
                     💰 {{ winner.price }}
                   </div>
 
-                  <!-- Pros/cons preview -->
-                  <div v-if="winner.advantage" class="winner-pro">
-                    <span class="winner-pro-label">✨ Ưu điểm</span>
-                    <span class="winner-pro-text">{{ winner.advantage }}</span>
-                  </div>
-
                   <div class="winner-btns">
-                    <button class="btn-spin-again" @click="spinAgain">🎲 Quay lại</button>
-                    <button class="btn-close" @click="winner = null">Đóng</button>
+                    <button class="btn-close" @click="winner = null">Quay lại</button>
                     <a v-if="winner.linkmap" :href="winner.linkmap" target="_blank" class="btn-map">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                         <circle cx="12" cy="10" r="3"/>
                       </svg>
-                      Đi ngay!
+                      Đi ngay thôi!
                     </a>
                   </div>
                 </div>
@@ -312,14 +245,9 @@ import type { Restaurant } from '../types'
 
 const store = useRestaurantStore()
 const selectedIds = ref<number[]>([])
+const rotation    = ref(0)
 const isSpinning  = ref(false)
 const winner      = ref<Restaurant | null>(null)
-const spinDuration = ref(5500)
-
-// The actual CSS rotation value - we track total accumulated degrees
-const rotation = ref(0)
-
-const WHEEL_SIZE = 310
 
 const candidates = computed(() =>
   store.restaurants.filter(r => selectedIds.value.includes(r.id))
@@ -327,153 +255,58 @@ const candidates = computed(() =>
 
 // ─── Wheel geometry ──────────────────────────────
 const segPath = (i: number, n: number, r: number) => {
-  const sliceAngle = (2 * Math.PI) / n
-  const startAngle = i * sliceAngle - Math.PI / 2
-  const endAngle   = startAngle + sliceAngle
-  const x1 = r * Math.cos(startAngle), y1 = r * Math.sin(startAngle)
-  const x2 = r * Math.cos(endAngle),   y2 = r * Math.sin(endAngle)
-  const largeArc = sliceAngle > Math.PI ? 1 : 0
-  return `M0,0 L${x1},${y1} A${r},${r} 0 ${largeArc},1 ${x2},${y2} Z`
+  const a = (2 * Math.PI) / n
+  const s = i * a - Math.PI / 2
+  const e = s + a
+  const x1 = r * Math.cos(s), y1 = r * Math.sin(s)
+  const x2 = r * Math.cos(e), y2 = r * Math.sin(e)
+  return `M0,0 L${x1},${y1} A${r},${r} 0 ${a > Math.PI ? 1 : 0},1 ${x2},${y2} Z`
 }
-
-// Label placed 65% from center toward edge
 const labelTransform = (i: number, n: number) => {
-  const sliceAngle = (2 * Math.PI) / n
-  const midAngle   = i * sliceAngle + sliceAngle / 2 - Math.PI / 2
-  const dist = n > 10 ? 72 : n > 6 ? 80 : 88
-  const x = dist * Math.cos(midAngle)
-  const y = dist * Math.sin(midAngle)
-  const rot = (midAngle * 180) / Math.PI + 90
-  return `translate(${x},${y}) rotate(${rot})`
-}
-
-// Emoji placed closer to center
-const emojiTransform = (i: number, n: number) => {
-  const sliceAngle = (2 * Math.PI) / n
-  const midAngle   = i * sliceAngle + sliceAngle / 2 - Math.PI / 2
-  const dist = n > 10 ? 95 : n > 6 ? 105 : 112
-  const x = dist * Math.cos(midAngle)
-  const y = dist * Math.sin(midAngle)
-  const rot = (midAngle * 180) / Math.PI + 90
-  return `translate(${x},${y}) rotate(${rot})`
+  const a = (2 * Math.PI) / n
+  const m = i * a + a / 2 - Math.PI / 2
+  const d = n > 6 ? 82 : 94
+  const x = d * Math.cos(m), y = d * Math.sin(m)
+  return `translate(${x},${y}) rotate(${(m * 180) / Math.PI + 90})`
 }
 
 const FILLS = [
-  '#FDE8ED', '#F0DEB8', '#EAE6F0',
-  'rgba(232,137,154,0.55)', 'rgba(201,169,110,0.45)', '#FBF3E4',
-  'rgba(210,200,230,0.7)', 'rgba(248,218,190,0.8)',
-  '#F5E6EE', '#E8F0E8',
+  'rgba(245,196,207,0.92)', 'rgba(240,222,184,0.92)', 'rgba(234,230,240,0.92)',
+  'rgba(232,137,154,0.68)', 'rgba(201,169,110,0.55)', 'rgba(253,232,237,0.92)',
+  'rgba(210,200,230,0.78)', 'rgba(248,218,190,0.88)',
 ]
 const TEXTS = [
   '#5A1F30', '#6B4A20', '#4A3860', '#7A2030',
   '#6B4A20', '#7A2D45', '#5A3870', '#7A4A20',
-  '#5A1F30', '#2D5030',
 ]
 const segFill = (i: number) => FILLS[i % FILLS.length]
 const segText = (i: number) => TEXTS[i % TEXTS.length]
 const shorten = (s: string, n: number) => s.length > n ? s.slice(0, n) + '…' : s
 
-const segEmoji = (name: string): string => {
-  const l = name.toLowerCase()
-  if (l.includes('burger') || l.includes('hamburger')) return '🍔'
-  if (l.includes('hàu') || l.includes('ốc')) return '🦪'
-  if (l.includes('bánh') || l.includes('bột')) return '🥐'
-  if (l.includes('bún') || l.includes('phở')) return '🍜'
-  if (l.includes('cơm')) return '🍚'
-  if (l.includes('lẩu')) return '🫕'
-  if (l.includes('trà') || l.includes('tea')) return '🧋'
-  if (l.includes('buffet')) return '🍽️'
-  if (l.includes('nướng')) return '🔥'
-  if (l.includes('gà') || l.includes('chân')) return '🍗'
-  if (l.includes('takoyaki')) return '🐙'
-  if (l.includes('trứng')) return '🥚'
-  return '🌸'
-}
-
-// ─── Accurate Spin ───────────────────────────────
-// The pointer is at the TOP (12 o'clock = -90° offset = 270°).
-// Segment i starts at angle: i * (360/n) degrees (from top, clockwise)
-// The winner segment i lands under the pointer when the top of that segment
-// is aligned with 0° offset. We compute how much to rotate the wheel.
-
+// ─── Spin ────────────────────────────────────────
 const spin = () => {
   if (isSpinning.value || candidates.value.length < 2) return
   isSpinning.value = true
   winner.value = null
 
   const n = candidates.value.length
-  const winnerIdx = Math.floor(Math.random() * n)
-  const sliceDeg  = 360 / n
-
-  // Current rotation (mod 360)
-  const currentMod = ((rotation.value % 360) + 360) % 360
-
-  // The winner segment's midpoint, in wheel coordinates (before rotation), measured from top
-  const winnerMid = winnerIdx * sliceDeg + sliceDeg / 2
-
-  // We need winnerMid + currentMod + delta ≡ 0 (mod 360) for pointer at top
-  // So delta = -winnerMid - currentMod (mod 360), then add full spins
-  let delta = ((-winnerMid - currentMod) % 360 + 360) % 360
-
-  // Add random wobble within the slice (±40% of slice)
-  const wobble = (Math.random() - 0.5) * sliceDeg * 0.80
-  delta += wobble
-
-  // Ensure at least 6 full rotations for drama
-  const minSpins = 6
-  delta += minSpins * 360
-
-  // Vary spin duration slightly for feel
-  spinDuration.value = 5000 + Math.random() * 1000
-
-  rotation.value += delta
+  const wi = Math.floor(Math.random() * n)
+  const slice = 360 / n
+  const extra = 7 * 360
+  const target = extra + 360 - wi * slice - slice / 2 + (Math.random() - 0.5) * slice * 0.55
+  rotation.value += target
 
   setTimeout(() => {
     isSpinning.value = false
-    winner.value = candidates.value[winnerIdx]
+    winner.value = candidates.value[wi]
     confetti({
-      particleCount: 180,
-      spread: 100,
-      origin: { y: 0.4 },
-      colors: ['#F5C4CF', '#E8899A', '#C9A96E', '#7A2D45', '#FDE8ED', '#ffffff', '#EAE6F0'],
+      particleCount: 140,
+      spread: 90,
+      origin: { y: 0.45 },
+      colors: ['#F5C4CF', '#E8899A', '#C9A96E', '#7A2D45', '#FDE8ED', '#ffffff'],
       disableForReducedMotion: true,
     })
-    // Second burst
-    setTimeout(() => {
-      confetti({
-        particleCount: 80,
-        angle: 60,
-        spread: 70,
-        origin: { x: 0, y: 0.5 },
-        colors: ['#F5C4CF', '#C9A96E', '#ffffff'],
-      })
-      confetti({
-        particleCount: 80,
-        angle: 120,
-        spread: 70,
-        origin: { x: 1, y: 0.5 },
-        colors: ['#E8899A', '#7A2D45', '#FDE8ED'],
-      })
-    }, 300)
-  }, spinDuration.value + 100)
-}
-
-const spinAgain = () => {
-  winner.value = null
-  setTimeout(spin, 200)
-}
-
-// ─── Quick-select helpers ─────────────────────────
-const selectAll = () => {
-  selectedIds.value = store.restaurants.map(r => r.id)
-}
-const clearAll = () => {
-  selectedIds.value = []
-}
-const randomSelect = () => {
-  const count = Math.floor(Math.random() * 6) + 3 // 3-8 random
-  const shuffled = [...store.restaurants].sort(() => Math.random() - 0.5)
-  selectedIds.value = shuffled.slice(0, count).map(r => r.id)
+  }, 5300)
 }
 
 // ─── Helpers ─────────────────────────────────────
@@ -533,56 +366,31 @@ const emoji = (name: string): string => {
 /* ── Wheel Zone ── */
 .wheel-zone {
   position: relative;
-  width: 340px; height: 340px;
-  margin: 0 auto 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 290px; height: 290px;
+  margin: 0 auto 28px;
 }
-
-/* Tick marks outer ring */
-.wheel-outer-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  pointer-events: none;
-}
-.wheel-outer-tick {
-  position: absolute;
-  top: 0; left: 50%;
-  width: 2px;
-  height: 10px;
-  margin-left: -1px;
-  transform-origin: 1px 170px;
-  background: rgba(201,169,110,0.35);
-  border-radius: 1px;
-}
-
 .wheel-glow-ring {
   position: absolute;
-  inset: -18px;
+  inset: -14px;
   border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    rgba(245,196,207,0.6),
-    rgba(201,169,110,0.6),
-    rgba(232,137,154,0.6),
-    rgba(240,222,184,0.5),
-    rgba(234,230,240,0.5),
-    rgba(245,196,207,0.6)
+    rgba(245,196,207,0.5),
+    rgba(201,169,110,0.5),
+    rgba(232,137,154,0.5),
+    rgba(240,222,184,0.4),
+    rgba(245,196,207,0.5)
   );
-  filter: blur(18px);
+  filter: blur(16px);
   opacity: 0;
   transition: opacity 0.8s ease;
-  animation: rotateSlow 6s linear infinite;
+  animation: rotateSlow 8s linear infinite;
 }
 .wheel-glow-ring.spinning { opacity: 1; }
 
 .wheel-container {
   position: absolute;
-  width: 310px; height: 310px;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
 }
 
 .wheel-empty {
@@ -608,68 +416,39 @@ const emoji = (name: string): string => {
   border-radius: 50%;
   overflow: hidden;
   box-shadow:
-    0 12px 60px rgba(90,31,48,0.32),
-    0 4px 16px rgba(90,31,48,0.15),
-    inset 0 0 0 5px rgba(255,255,255,0.6),
-    inset 0 0 0 7px rgba(201,169,110,0.18);
-  will-change: transform;
+    0 10px 50px rgba(90,31,48,0.28),
+    inset 0 0 0 5px rgba(255,255,255,0.55),
+    inset 0 0 0 6px rgba(201,169,110,0.15);
 }
 
-/* Hub */
 .wheel-hub {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px; height: 60px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   background: white;
-  box-shadow:
-    0 6px 24px rgba(90,31,48,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.95),
-    inset 0 -2px 4px rgba(90,31,48,0.08);
+  box-shadow: 0 5px 20px rgba(90,31,48,0.22), inset 0 1px 0 rgba(255,255,255,0.9);
   display: flex; align-items: center; justify-content: center;
   z-index: 10;
 }
-.wheel-hub-ring {
-  position: absolute;
-  inset: 5px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(201,169,110,0.4);
-}
 .wheel-hub-inner {
-  width: 20px; height: 20px;
+  width: 18px; height: 18px;
   border-radius: 50%;
   background: linear-gradient(135deg, #7A2D45, #C45B6E);
-  box-shadow: 0 3px 10px rgba(122,45,69,0.55);
+  box-shadow: 0 2px 8px rgba(122,45,69,0.5);
 }
 
 .wheel-label { user-select: none; pointer-events: none; }
 
-/* Pointer */
 .wheel-pointer {
   position: absolute;
-  top: -6px; left: 50%;
+  top: -12px; left: 50%;
   transform: translateX(-50%);
   z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.22));
 }
-.pointer-svg { width: 28px; height: 36px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.28)); }
-
-.pointer-glow {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,137,154,0.8), transparent);
-  filter: blur(8px);
-  opacity: 0;
-  transition: opacity 0.4s;
-  pointer-events: none;
-}
-.pointer-glow.active { opacity: 1; animation: pulseGlow 0.5s ease-in-out infinite; }
+.pointer-svg { width: 22px; height: 28px; }
 
 /* ── Spin Button ── */
 .spin-btn-wrap {
@@ -679,31 +458,31 @@ const emoji = (name: string): string => {
 }
 .spin-btn {
   position: relative;
-  padding: 17px 42px;
-  border-radius: 26px;
+  padding: 16px 36px;
+  border-radius: 22px;
   border: none;
   color: white;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
   display: flex; align-items: center; gap: 10px;
-  background: linear-gradient(135deg, #5A1F30 0%, #7A2D45 30%, #C45B6E 70%, #E8899A 100%);
-  box-shadow: 0 14px 40px rgba(122,45,69,0.48), 0 4px 12px rgba(122,45,69,0.3);
+  background: linear-gradient(135deg, #7A2D45 0%, #C45B6E 55%, #E8899A 100%);
+  box-shadow: var(--shadow-btn);
   overflow: hidden;
   transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.2s ease;
 }
 .spin-btn:not(:disabled):hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 52px rgba(122,45,69,0.58);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 48px rgba(122,45,69,0.52);
 }
 .spin-btn:not(:disabled):active { transform: scale(0.96); }
-.spin-btn:disabled { opacity: 0.75; cursor: not-allowed; }
+.spin-btn:disabled { opacity: 0.72; cursor: not-allowed; }
 
 .spin-btn-shimmer {
   position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
   background-size: 200% auto;
   animation: shimmerText 2s linear infinite;
   pointer-events: none;
@@ -754,7 +533,7 @@ const emoji = (name: string): string => {
 /* ── Check header ── */
 .check-header {
   display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px; padding: 0 2px;
+  margin-bottom: 14px; padding: 0 2px;
 }
 .check-header-line {
   flex: 1; height: 1px;
@@ -764,38 +543,6 @@ const emoji = (name: string): string => {
   font-size: 10px; font-weight: 700;
   letter-spacing: 0.32em; text-transform: uppercase;
   color: rgba(160,145,130,0.7); white-space: nowrap;
-}
-
-/* ── Quick select ── */
-.quick-select {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.qs-btn {
-  padding: 7px 14px;
-  border-radius: 100px;
-  border: 1.5px solid rgba(201,169,110,0.3);
-  background: rgba(255,255,255,0.55);
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  font-weight: 600;
-  color: rgba(120,100,100,0.8);
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-.qs-btn:hover {
-  border-color: rgba(232,137,154,0.45);
-  color: var(--berry);
-  background: rgba(253,232,237,0.55);
-}
-.qs-btn:active { transform: scale(0.94); }
-.qs-random {
-  background: linear-gradient(135deg, rgba(122,45,69,0.08), rgba(201,169,110,0.1));
-  border-color: rgba(122,45,69,0.2);
-  color: var(--berry);
 }
 
 /* ── Checklist ── */
@@ -865,9 +612,9 @@ const emoji = (name: string): string => {
   position: fixed; inset: 0; z-index: 70;
   display: flex; align-items: flex-end; justify-content: center;
   padding: 0 16px 28px;
-  background: rgba(61,26,38,0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(61,26,38,0.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .winner-card {
@@ -875,13 +622,13 @@ const emoji = (name: string): string => {
   border-radius: 36px;
   overflow: hidden;
   background: #FAF7F2;
-  box-shadow: 0 24px 80px rgba(90,31,48,0.38), 0 8px 24px rgba(90,31,48,0.2);
+  box-shadow: var(--shadow-float);
 }
 .winner-band {
-  height: 5px;
+  height: 4px;
   background: linear-gradient(90deg, #7A2D45, #C45B6E, #E8899A, #C9A96E, #E8899A, #C45B6E, #7A2D45);
   background-size: 200% auto;
-  animation: borderShimmer 3s linear infinite;
+  animation: borderShimmer 5s linear infinite;
 }
 .winner-body {
   padding: 28px 28px 32px;
@@ -890,46 +637,38 @@ const emoji = (name: string): string => {
 }
 .winner-blob-1 {
   position: absolute; top: -50px; right: -50px;
-  width: 180px; height: 180px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,196,207,0.8), transparent);
-  filter: blur(26px); pointer-events: none;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,196,207,0.75), transparent);
+  filter: blur(24px); pointer-events: none;
 }
 .winner-blob-2 {
   position: absolute; bottom: -30px; left: -30px;
-  width: 140px; height: 140px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,169,110,0.6), transparent);
-  filter: blur(22px); pointer-events: none;
-}
-.winner-blob-3 {
-  position: absolute; top: 40%; left: 40%;
-  width: 120px; height: 120px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(234,230,240,0.6), transparent);
-  filter: blur(30px); pointer-events: none;
+  width: 130px; height: 130px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,169,110,0.55), transparent);
+  filter: blur(20px); pointer-events: none;
 }
 .winner-content { position: relative; text-align: center; }
 
 .winner-celebrate { margin-bottom: 18px; }
 .winner-emoji-ring {
-  width: 90px; height: 90px; border-radius: 50%;
-  background: linear-gradient(135deg, rgba(245,196,207,0.7), rgba(201,169,110,0.4));
-  box-shadow: 0 12px 40px rgba(122,45,69,0.25);
+  width: 82px; height: 82px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(245,196,207,0.65), rgba(201,169,110,0.35));
+  box-shadow: 0 10px 36px rgba(122,45,69,0.22);
   display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 10px;
+  margin: 0 auto 8px;
   position: relative;
 }
 .winner-ripple {
   position: absolute; inset: 0; border-radius: 50%;
-  border: 2px solid rgba(232,137,154,0.5);
+  background: rgba(232,137,154,0.25);
   animation: ripple 2s ease-out infinite;
 }
-.winner-ripple-2 {
-  animation-delay: 0.6s;
-}
-.winner-emoji { font-size: 42px; position: relative; z-index: 1; }
+.winner-emoji { font-size: 38px; position: relative; z-index: 1; }
 .winner-stars {
-  font-size: 11px;
-  letter-spacing: 10px;
-  margin-bottom: 2px;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 8px;
+  opacity: 0.6;
 }
 
 .winner-eyebrow {
@@ -939,88 +678,50 @@ const emoji = (name: string): string => {
 }
 .winner-name {
   font-family: var(--font-display);
-  font-size: 27px; font-weight: 600;
+  font-size: 28px; font-weight: 600;
   color: var(--berry-dark); line-height: 1.2;
   margin-bottom: 7px;
 }
 .winner-addr {
   font-size: 12px; color: rgba(160,145,130,0.8);
   display: flex; align-items: center; justify-content: center; gap: 5px;
-  margin-bottom: 16px; line-height: 1.5;
+  margin-bottom: 18px;
 }
 .winner-divider {
-  height: 1px; margin-bottom: 14px;
+  height: 1px; margin-bottom: 16px;
   background: linear-gradient(90deg, transparent, rgba(201,169,110,0.55), rgba(232,137,154,0.4), rgba(201,169,110,0.55), transparent);
 }
 .winner-price {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 18px; border-radius: 100px;
+  padding: 9px 18px; border-radius: 100px;
   background: linear-gradient(135deg, rgba(201,169,110,0.2), rgba(245,196,207,0.3));
   border: 1px solid rgba(201,169,110,0.32);
   font-size: 13.5px; font-weight: 600; color: var(--berry);
-  margin-bottom: 12px;
-}
-.winner-pro {
-  display: flex; flex-direction: column; gap: 3px;
-  padding: 10px 16px;
-  border-radius: 14px;
-  background: rgba(141,170,140,0.12);
-  border: 1px solid rgba(141,170,140,0.28);
   margin-bottom: 20px;
-  text-align: left;
 }
-.winner-pro-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--sage);
-}
-.winner-pro-text {
-  font-size: 13px; color: var(--plum); opacity: 0.75; line-height: 1.5;
-}
-.winner-btns {
-  display: flex; gap: 8px;
-  flex-wrap: wrap;
-}
-.btn-spin-again {
-  flex: 1;
-  padding: 13px 10px;
-  border-radius: 16px;
-  border: 1.5px solid rgba(201,169,110,0.3);
-  background: rgba(255,255,255,0.6);
-  font-family: var(--font-body);
-  font-size: 12.5px; font-weight: 700;
-  color: var(--berry); cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.btn-spin-again:hover {
-  background: rgba(245,196,207,0.35);
-  border-color: rgba(232,137,154,0.4);
-  transform: translateY(-1px);
-}
-.btn-spin-again:active { transform: scale(0.96); }
+.winner-btns { display: flex; gap: 10px; }
 .btn-close {
-  flex: 1; padding: 13px;
-  border-radius: 16px;
+  flex: 1; padding: 15px;
+  border-radius: 18px;
   border: 1px solid rgba(0,0,0,0.08);
   background: rgba(0,0,0,0.05);
   font-family: var(--font-body);
-  font-size: 12.5px; font-weight: 600;
+  font-size: 13.5px; font-weight: 600;
   color: rgba(100,85,85,0.8); cursor: pointer;
   transition: all 0.2s;
 }
 .btn-close:hover { background: rgba(0,0,0,0.09); }
 .btn-close:active { transform: scale(0.96); }
 .btn-map {
-  flex: 2; padding: 13px;
-  border-radius: 16px; border: none;
+  flex: 2; padding: 15px;
+  border-radius: 18px; border: none;
   background: linear-gradient(135deg, #7A2D45 0%, #C45B6E 55%, #E8899A 100%);
   box-shadow: var(--shadow-btn);
   font-family: var(--font-body);
-  font-size: 12.5px; font-weight: 700; color: white;
+  font-size: 13.5px; font-weight: 700; color: white;
   text-decoration: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: all 0.25s;
-  white-space: nowrap;
 }
 .btn-map:hover { transform: translateY(-2px); box-shadow: 0 16px 44px rgba(122,45,69,0.52); }
 .btn-map:active { transform: scale(0.97); }
